@@ -3,5 +3,5 @@
 ## Overview
 This ecoScript
 
-Inline-style: 
-![alt text](https://github.com/techBeck03/Scratch/raw/master/ecoScripts/vmware/icon.png "Logo Title Text 1")
+![alt text](https://github.com/techBeck03/Scratch/raw/master/ecoScripts/vmware/icon.png "Logo Title Text 1") 
+Inline-style
