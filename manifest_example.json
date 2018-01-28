@@ -1,0 +1,24 @@
+[
+    {
+        "name": "vcenter",
+        "label": "vCenter Annotations",
+        "versions": [
+            0.1
+        ],
+        "latest": 0.1,
+        "path": "https://github.com/techBeck03/Scratch/raw/master/ecoScripts/vmware",
+        "icon": "icon.png",
+        "tags": "vmware"
+    },
+    {
+        "name": "infoblox",
+        "label": "Infoblox Annotations",
+        "versions": [
+            0.1
+        ],
+        "latest": 0.1,
+        "path": "https://github.com/techBeck03/Scratch/raw/master/ecoScripts/infoblox",
+        "icon": "icon.png",
+        "tags": "ipam"
+    }
+]
