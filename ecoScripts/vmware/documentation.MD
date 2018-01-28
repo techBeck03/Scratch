@@ -1,4 +1,4 @@
-<img src="https://github.com/techBeck03/Scratch/raw/master/ecoScripts/vmware/icon.png" /><h1>vmware annotation ecoScript Documentation</h1>
+<img src="https://github.com/techBeck03/Scratch/raw/master/ecoScripts/vmware/icon.png" /><h2 style="display:inline;">vmware annotation ecoScript Documentation</h2>
 
 ## Overview
 This ecoScript
