@@ -1,0 +1,99 @@
+[
+    {
+        "version": "0.1",
+        "type": "api",
+        "configurable": true,
+        "schedulable": true,
+        "config_parameters":
+        [
+            {
+                "name": "connection_parameters",
+                "label": "Connection Parameters",
+                "order": 1,
+                "items": [
+                    {
+                        "name": "infoblox",
+                        "label": "Infoblox",
+                        "type": "text",
+                        "environment_variable_name": "IB",
+                        "required": "true",
+                        "placeholder": "Infoblox Hostname or IP",
+                        "order": 1,
+                        "verify": false
+                    },
+                    {
+                        "name": "ib username",
+                        "label": "Infoblox Username",                
+                        "type": "text",
+                        "environment_variable_name": "IB_USERNAME",
+                        "required": "true",
+                        "placeholder": "Infoblox Username (read-only)",
+                        "order": 2,
+                        "verify": false
+                    },
+                    {
+                        "name": "ib password",
+                        "label": "Infoblox Password",
+                        "type": "password",
+                        "environment_variable_name": "IB_PASSWORD",
+                        "required": "true",
+                        "placeholder": "Infoblox Password",
+                        "order": 3,
+                        "verify": false
+                    }
+                ]
+            },
+            {
+                "name": "annotation_options",
+                "label": "Annotation Options",
+                "order": 2,
+                "items": [
+                    {
+                        "name": "hostname",
+                        "label": "Hostname",
+                        "type": "radio",
+                        "annotation": "true",
+                        "environment_variable_name": "ENABLE_HOSTNAME",
+                        "default value": "false",
+                        "popover": "Annotate hostnames",
+                        "order": 1,
+                        "verify": false
+                    },
+                    {
+                        "name": "network view",
+                        "label": "Network View",
+                        "type": "radio",
+                        "annotation": "true",
+                        "environment_variable_name": "ENABLE_NETWORK_VIEW",
+                        "default value": "false",
+                        "popover": "Annotate network view",
+                        "order": 2,
+                        "verify": false
+                    },
+                    {
+                        "name": "subnet",
+                        "label": "Network Subnet",
+                        "type": "radio",
+                        "annotation": "true",
+                        "environment_variable_name": "ENABLE_Subnet",
+                        "default value": "false",
+                        "popover": "Annotate parent subnet of endpoint",
+                        "order": 3,
+                        "verify": false
+                    },
+                    {
+                        "name": "extensible attributes",
+                        "label": "Extensible Attributes",
+                        "type": "radio",
+                        "annotation": "true",
+                        "environment_variable_name": "ENABLE_VM_NETWORK",
+                        "default value": "false",
+                        "popover": "VM Networks (PortGroup-1,PortGroup-2)",
+                        "order": 4,
+                        "verify": true
+                    }
+                ]
+            }            
+        ]
+    }
+]
