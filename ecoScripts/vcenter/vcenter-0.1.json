@@ -1,129 +1,124 @@
-[
-    {
-        "version": "0.1",
-        "type": "api",
-        "configurable": true,
-        "schedulable": true,
-        "config_parameters":
-        [
-            {
-                "name": "connection_parameters",
-                "label": "Connection Parameters",
-                "order": 1,
-                "items" :
-                [
-                    {
-                        "name": "vc",
-                        "label": "vCenter",
-                        "type": "text",
-                        "environment_variable_name": "VC",
-                        "required": "true",
-                        "placeholder": "vCenter Hostname or IP",
-                        "order": 1,
-                        "verify": false
-                    },
-                    {
-                        "name": "vc username",
-                        "label": "VC Username",                
-                        "type": "text",
-                        "environment_variable_name": "VC_USERNAME",
-                        "required": "true",
-                        "placeholder": "vCenter Username (read-only)",
-                        "order": 2,
-                        "verify": false
-                    },
-                    {
-                        "name": "vc password",
-                        "label": "VC Password",
-                        "type": "password",
-                        "environment_variable_name": "VC_PASSWORD",
-                        "required": "true",
-                        "placeholder": "vCenter Password",
-                        "order": 3,
-                        "verify": false
-                    }
-                ]
-            },
-            {
-                "name": "annotation_options",
-                "label": "Annotation Options",
-                "order": 2,
-                "items":
-                [
-                    {
-                        "name": "vm_name",
-                        "label": "VM Name",
-                        "type": "radio",
-                        "environment_variable_name": "ENABLE_VM_NAME",
-                        "default_radio_value": "false",
-                        "default_input_value": "",
-                        "popover": "VM name",
-                        "placeholder": "",
-                        "order": 1,
-                        "verify": false,
-                        "children": [
-                            {
-                                "name": "vm_name_annotation_name",
-                                "label": "Annotation Name",
-                                "type": "text",
-                                "annotation": true,
-                                "environment_variable_name": "VM_NAME_ANNOTATION_NAME",
-                                "default_input_value": "VM Name",
-                                "placeholder": "Annotation Name",
-                                "order": 1,
-                                "verify": false
-                            }
-                        ]
-                    },
-                    {
-                        "name": "vsphere_tags",
-                        "label": "vSphere Tags",
-                        "type": "radio",
-                        "environment_variable_name": "ENABLE_VM_TAGS",
-                        "default_radio_value": "false",
-                        "default_input_value": "",
-                        "popover": "vSphere Tags (tag1=value1;tag2=value2;)",
-                        "placeholder": "",
-                        "order": 2,
-                        "verify": false,
-                        "children": [
-                            {
-                                "name": "vsphere_tags_annotation_name",
-                                "label": "Annotation Name",
-                                "type": "text",
-                                "annotation": true,
-                                "environment_variable_name": "VSPHERE_TAGS_ANNOTATION_NAME",
-                                "default_input_value": "VM Name",
-                                "placeholder": "Annotation Name",
-                                "order": 1,
-                                "verify": false
-                            }
-                        ]
-                    },
-                    {
-                        "name": "vm location",
-                        "label": "VM Location",
-                        "type": "radio_input",
-                        "annotation": "true",
-                        "environment_variable_name": "ENABLE_VM_LOCATION",
-                        "default_value": "false",
-                        "popover": "Location of VM (ESX Host/Cluster)",
-                        "order": 3,
-                        "verify": false
-                    },
-                    {
-                        "name": "vm networks",
-                        "label": "VM Networks",
-                        "type": "radio_input",
-                        "annotation": "true",
-                        "environment_variable_name": "ENABLE_VM_NETWORK",
-                        "default_value": "false",
-                        "popover": "VM Networks (PortGroup-1,PortGroup-2)",
-                        "order": 4,
-                        "verify": false
-                    }
-                ]
-            }
-        ]
-    }
-]
+{
+    "version": "0.1",
+    "type": "api",
+    "configurable": true,
+    "schedulable": true,
+    "config_parameters": [
+        {
+            "name": "connection_parameters",
+            "label": "Connection Parameters",
+            "order": 1,
+            "items": [
+                {
+                    "name": "vc",
+                    "label": "vCenter",
+                    "type": "text",
+                    "environment_variable_name": "VC",
+                    "required": "true",
+                    "placeholder": "vCenter Hostname or IP",
+                    "order": 1,
+                    "verify": false
+                },
+                {
+                    "name": "vc username",
+                    "label": "VC Username",
+                    "type": "text",
+                    "environment_variable_name": "VC_USERNAME",
+                    "required": "true",
+                    "placeholder": "vCenter Username (read-only)",
+                    "order": 2,
+                    "verify": false
+                },
+                {
+                    "name": "vc password",
+                    "label": "VC Password",
+                    "type": "password",
+                    "environment_variable_name": "VC_PASSWORD",
+                    "required": "true",
+                    "placeholder": "vCenter Password",
+                    "order": 3,
+                    "verify": false
+                }
+            ]
+        },
+        {
+            "name": "annotation_options",
+            "label": "Annotation Options",
+            "order": 2,
+            "items": [
+                {
+                    "name": "vm_name",
+                    "label": "VM Name",
+                    "type": "radio",
+                    "environment_variable_name": "ENABLE_VM_NAME",
+                    "default_radio_value": "false",
+                    "default_input_value": "",
+                    "popover": "VM name",
+                    "placeholder": "",
+                    "order": 1,
+                    "verify": false,
+                    "children": [
+                        {
+                            "name": "vm_name_annotation_name",
+                            "label": "Annotation Name",
+                            "type": "text",
+                            "annotation": true,
+                            "environment_variable_name": "VM_NAME_ANNOTATION_NAME",
+                            "default_input_value": "VM Name",
+                            "placeholder": "Annotation Name",
+                            "order": 1,
+                            "verify": false
+                        }
+                    ]
+                },
+                {
+                    "name": "vsphere_tags",
+                    "label": "vSphere Tags",
+                    "type": "radio",
+                    "environment_variable_name": "ENABLE_VM_TAGS",
+                    "default_radio_value": "false",
+                    "default_input_value": "",
+                    "popover": "vSphere Tags (tag1=value1;tag2=value2;)",
+                    "placeholder": "",
+                    "order": 2,
+                    "verify": false,
+                    "children": [
+                        {
+                            "name": "vsphere_tags_annotation_name",
+                            "label": "Annotation Name",
+                            "type": "text",
+                            "annotation": true,
+                            "environment_variable_name": "VSPHERE_TAGS_ANNOTATION_NAME",
+                            "default_input_value": "VM Name",
+                            "placeholder": "Annotation Name",
+                            "order": 1,
+                            "verify": false
+                        }
+                    ]
+                },
+                {
+                    "name": "vm location",
+                    "label": "VM Location",
+                    "type": "radio_input",
+                    "annotation": "true",
+                    "environment_variable_name": "ENABLE_VM_LOCATION",
+                    "default_value": "false",
+                    "popover": "Location of VM (ESX Host/Cluster)",
+                    "order": 3,
+                    "verify": false
+                },
+                {
+                    "name": "vm networks",
+                    "label": "VM Networks",
+                    "type": "radio_input",
+                    "annotation": "true",
+                    "environment_variable_name": "ENABLE_VM_NETWORK",
+                    "default_value": "false",
+                    "popover": "VM Networks (PortGroup-1,PortGroup-2)",
+                    "order": 4,
+                    "verify": false
+                }
+            ]
+        }
+    ]
+}
