@@ -1,4 +1,4 @@
-## ![alt text](https://github.com/techBeck03/Scratch/raw/master/ecoScripts/vmware/icon.png "Logo") vmware annotation ecoScript Documentation
+## ![alt text](https://github.com/techBeck03/Scratch/raw/master/ecoScripts/vcenter/icon.png "Logo") vmware annotation ecoScript Documentation
 
 ### Overview
 The vCenter annotations ecoScript will generate user annotations for your tetration deployment.  You can selectively annotate based on:
