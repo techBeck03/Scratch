@@ -99,24 +99,50 @@
                 {
                     "name": "vm location",
                     "label": "VM Location",
-                    "type": "radio_input",
+                    "type": "radio",
                     "annotation": "true",
                     "environment_variable_name": "ENABLE_VM_LOCATION",
                     "default_value": "false",
                     "popover": "Location of VM (ESX Host/Cluster)",
                     "order": 3,
-                    "verify": false
+                    "verify": false,
+                    "children": [
+                        {
+                            "name": "vm_location_annotation_name",
+                            "label": "Annotation Name",
+                            "type": "text",
+                            "annotation": true,
+                            "environment_variable_name": "VM_LOCATION_ANNOTATION_NAME",
+                            "default_input_value": "VM Location",
+                            "placeholder": "Annotation Name",
+                            "order": 1,
+                            "verify": false
+                        }
+                    ]
                 },
                 {
                     "name": "vm networks",
                     "label": "VM Networks",
-                    "type": "radio_input",
+                    "type": "radio",
                     "annotation": "true",
                     "environment_variable_name": "ENABLE_VM_NETWORK",
                     "default_value": "false",
                     "popover": "VM Networks (PortGroup-1,PortGroup-2)",
                     "order": 4,
-                    "verify": false
+                    "verify": false,
+                    "children": [
+                        {
+                            "name": "vm_networks_annotation_name",
+                            "label": "Annotation Name",
+                            "type": "text",
+                            "annotation": true,
+                            "environment_variable_name": "VM_NETWORKS_ANNOTATION_NAME",
+                            "default_input_value": "VM Networks",
+                            "placeholder": "Annotation Name",
+                            "order": 1,
+                            "verify": false
+                        }
+                    ]
                 }
             ]
         }
