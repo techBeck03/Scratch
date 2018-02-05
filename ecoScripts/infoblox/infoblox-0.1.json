@@ -20,7 +20,7 @@
                     "verify": false
                 },
                 {
-                    "name": "ib username",
+                    "name": "ib_username",
                     "label": "Infoblox Username",
                     "type": "text",
                     "environment_variable_name": "IB_USERNAME",
@@ -30,7 +30,7 @@
                     "verify": false
                 },
                 {
-                    "name": "ib password",
+                    "name": "ib_password",
                     "label": "Infoblox Password",
                     "type": "password",
                     "environment_variable_name": "IB_PASSWORD",
@@ -55,10 +55,23 @@
                     "default value": "false",
                     "popover": "Annotate hostnames",
                     "order": 1,
-                    "verify": false
+                    "verify": false,
+                    "children": [
+                        {
+                            "name": "hostname_annotation_name",
+                            "label": "Tetration Annotation Name",
+                            "type": "text",
+                            "annotation": true,
+                            "environment_variable_name": "HOSTNAME_ANNOTATION_NAME",
+                            "default_input_value": "Iblox Hostname",
+                            "placeholder": "Tetration Annotation Name",
+                            "order": 1,
+                            "verify": false
+                        }
+                    ]
                 },
                 {
-                    "name": "network view",
+                    "name": "network_view",
                     "label": "Network View",
                     "type": "switch",
                     "annotation": "true",
@@ -66,7 +79,20 @@
                     "default value": "false",
                     "popover": "Annotate network view",
                     "order": 2,
-                    "verify": false
+                    "verify": false,
+                    "children": [
+                        {
+                            "name": "network_view_annotation_name",
+                            "label": "Tetration Annotation Name",
+                            "type": "text",
+                            "annotation": true,
+                            "environment_variable_name": "NETWORK_VIEW_ANNOTATION_NAME",
+                            "default_input_value": "Iblox View",
+                            "placeholder": "Tetration Annotation Name",
+                            "order": 1,
+                            "verify": false
+                        }
+                    ]
                 },
                 {
                     "name": "subnet",
@@ -77,7 +103,20 @@
                     "default value": "false",
                     "popover": "Annotate parent subnet of endpoint",
                     "order": 3,
-                    "verify": false
+                    "verify": false,
+                    "children": [
+                        {
+                            "name": "subnet_annotation_name",
+                            "label": "Tetration Annotation Name",
+                            "type": "text",
+                            "annotation": true,
+                            "environment_variable_name": "SUBNET_ANNOTATION_NAME",
+                            "default_input_value": "Iblox Subnet",
+                            "placeholder": "Tetration Annotation Name",
+                            "order": 1,
+                            "verify": false
+                        }
+                    ]
                 },
                 {
                     "name": "extensible attributes",
@@ -88,7 +127,20 @@
                     "default value": "false",
                     "popover": "VM Networks (PortGroup-1,PortGroup-2)",
                     "order": 4,
-                    "verify": true
+                    "verify": true,
+                    "children": [
+                        {
+                            "name": "ea_annotation_name",
+                            "label": "Tetration Annotation Name",
+                            "type": "text",
+                            "annotation": true,
+                            "environment_variable_name": "EA_ANNOTATION_NAME",
+                            "default_input_value": "Iblox EA",
+                            "placeholder": "Tetration Annotation Name",
+                            "order": 1,
+                            "verify": false
+                        }
+                    ]
                 }
             ]
         }

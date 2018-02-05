@@ -60,12 +60,12 @@
                     "children": [
                         {
                             "name": "vm_name_annotation_name",
-                            "label": "Annotation Name",
+                            "label": "Tetration Annotation Name",
                             "type": "text",
                             "annotation": true,
                             "environment_variable_name": "VM_NAME_ANNOTATION_NAME",
                             "default_input_value": "VM Name",
-                            "placeholder": "Annotation Name",
+                            "placeholder": "Tetration Annotation Name",
                             "order": 1,
                             "verify": false
                         }
@@ -85,12 +85,12 @@
                     "children": [
                         {
                             "name": "vsphere_tags_annotation_name",
-                            "label": "Annotation Name",
+                            "label": "Tetration Annotation Name",
                             "type": "text",
                             "annotation": true,
                             "environment_variable_name": "VSPHERE_TAGS_ANNOTATION_NAME",
                             "default_input_value": "VM Name",
-                            "placeholder": "Annotation Name",
+                            "placeholder": "Tetration Annotation Name",
                             "order": 1,
                             "verify": false
                         }
@@ -109,12 +109,12 @@
                     "children": [
                         {
                             "name": "vm_location_annotation_name",
-                            "label": "Annotation Name",
+                            "label": "Tetration Annotation Name",
                             "type": "text",
                             "annotation": true,
                             "environment_variable_name": "VM_LOCATION_ANNOTATION_NAME",
                             "default_input_value": "VM Location",
-                            "placeholder": "Annotation Name",
+                            "placeholder": "Tetration Annotation Name",
                             "order": 1,
                             "verify": false
                         }
@@ -133,12 +133,12 @@
                     "children": [
                         {
                             "name": "vm_networks_annotation_name",
-                            "label": "Annotation Name",
+                            "label": "Tetration Annotation Name",
                             "type": "text",
                             "annotation": true,
                             "environment_variable_name": "VM_NETWORKS_ANNOTATION_NAME",
                             "default_input_value": "VM Networks",
-                            "placeholder": "Annotation Name",
+                            "placeholder": "Tetration Annotation Name",
                             "order": 1,
                             "verify": false
                         }
