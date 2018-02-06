@@ -1,4 +1,4 @@
-## ![alt text](https://github.com/techBeck03/Scratch/raw/master/ecoScripts/infoblox/icon.png "Logo") infoblox annotation ecoScript Documentation
+## ![alt text](https://github.com/techBeck03/Scratch/raw/master/ecoScripts/infoblox/icon.png "Logo") infoblox Annotations
 
 ### Overview
 The Infoblox annotations ecoScript will generate user annotations for your tetration deployment.  You can selectively annotate based on:
