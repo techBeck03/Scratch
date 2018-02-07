@@ -12,7 +12,9 @@
             "controls": [
                 {
                     "label": "Test Connectivity",
-                    "action": "test_connectivity"
+                    "action": "test_connectivity",
+                    "runLabel": "Testing Connectivity",
+                    "type": "text"
                 }
             ],
             "items": [
