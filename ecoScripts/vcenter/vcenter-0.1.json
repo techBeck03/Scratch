@@ -13,7 +13,7 @@
                 {
                     "label": "Test Connectivity",
                     "action": "test_connectivity",
-                    "runLabel": "Testing Connectivity",
+                    "message": "Testing Connectivity",
                     "type": "text"
                 }
             ],
