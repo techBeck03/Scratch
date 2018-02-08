@@ -14,7 +14,11 @@
                     "label": "Test Connectivity",
                     "action": "test_connectivity",
                     "message": "Testing Connectivity",
-                    "type": "text"
+                    "type": "icon",
+                    "icon": {
+                        "group": "action",
+                        "name": "assesment"
+                    }
                 }
             ],
             "items": [
