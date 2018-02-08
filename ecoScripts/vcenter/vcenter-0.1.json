@@ -30,27 +30,37 @@
                     "required": true,
                     "placeholder": "vCenter Hostname or IP",
                     "order": 1,
-                    "verify": false
+                    "verify": true
                 },
                 {
-                    "name": "vc username",
+                    "name": "vc_username",
                     "label": "VC Username",
                     "type": "text",
                     "environment_variable_name": "VCENTER_USER",
                     "required": true,
                     "placeholder": "vCenter Username (read-only)",
                     "order": 2,
-                    "verify": false
+                    "verify": true
                 },
                 {
-                    "name": "vc password",
+                    "name": "vc_password",
                     "label": "VC Password",
                     "type": "password",
                     "environment_variable_name": "VCENTER_PWD",
                     "required": true,
                     "placeholder": "vCenter Password",
                     "order": 3,
-                    "verify": false
+                    "verify": true
+                },
+                {
+                    "name": "vc_datacenter",
+                    "label": "VC Datacenter",
+                    "type": "text",
+                    "environment_variable_name": "VCENTER_DATACENTER",
+                    "required": true,
+                    "placeholder": "vCenter Datacenter",
+                    "order": 4,
+                    "verify": true
                 }
             ]
         },
