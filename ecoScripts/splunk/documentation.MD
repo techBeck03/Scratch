@@ -1,7 +1,7 @@
-## ![alt text](https://github.com/techBeck03/Scratch/raw/master/ecoScripts/servicenow/icon.png "Logo") ServiceNow CMDB
+## ![alt text](https://github.com/techBeck03/Scratch/raw/master/ecoScripts/splunk/icon.png "Logo") Splunk Monitoring
 
 ### Overview
-The ServiceNow integration is bi-directional and requires that the **Cisco Tetration Application** be installed from the ServiceNow store in addition to enabling this feature in ecohub. The benefits of this integration are:
+The Splunk integration is bi-directional and requires that the **Cisco Tetration Application** be installed from the ServiceNow store in addition to enabling this feature in ecohub. The benefits of this integration are:
 
 - Tetration detects endpoints using flow analysis and pushes them to the SerivceNow CMDB. 
 - Tetration-defined outliers and exceptions trigger trouble-ticket creation in ServiceNow.
