@@ -1,11 +1,10 @@
 ## ![alt text](https://github.com/techBeck03/Scratch/raw/master/ecoScripts/splunk/icon.png "Logo") Splunk Monitoring
 
 ### Overview
-The Splunk integration is bi-directional and requires that the **Cisco Tetration Application** be installed from the ServiceNow store in addition to enabling this feature in ecohub. The benefits of this integration are:
+The Tetration add-on for Splunk Enterprise version 1.0 is available on Splunkbase. It requires middleware to interface with Tetration, and this integration acts as that middleware. The use cases are:
 
-- Tetration detects endpoints using flow analysis and pushes them to the SerivceNow CMDB. 
-- Tetration-defined outliers and exceptions trigger trouble-ticket creation in ServiceNow.
-- The ServiceNow CMDB can be used to augment the inventory annotations in Tetration.
-- Tetration ADM results autment top-down config file based discovery of servicewatch.
+- Compliance & security on Splunk 
+- Performance & fault info in Tetration
+- Policy enforcement
 
-The script will query tetration for any observed inventory endpoints and look for matching IPs or hostnames within your Infoblox inventory.
+The script will use Tetration APIs to retrieve ADM, endpoints, and inventory data and send them to the Tetration for Splunk add-in.
