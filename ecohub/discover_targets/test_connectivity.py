@@ -50,7 +50,7 @@ def test_tetration():
         resp = restclient.get('/filters/inventories')
 
     # most likely a DNS issue
-    except requests.exceptions.ConnectionError as c_error:
+    except requests.exceptions.ConnectionError:
         status = 404
         return_msg = "Error connecting to Tetration endpoint"
     except:
