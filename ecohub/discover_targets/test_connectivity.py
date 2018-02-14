@@ -35,6 +35,7 @@ def test_tetration():
     handling. It returns a tuple that has a status code and an error message
     (which will be an empty string if there are no errors)
     '''
+    requests.packages.urllib3.disable_warnings()
     status = 200
     return_msg = "Tetration connectivity verified."
 
@@ -45,10 +46,8 @@ def test_tetration():
         verify=False
     )
 
-    requests.packages.urllib3.disable_warnings()
-
     try:
-        resp = restclient.get('/openapi/v1/filters/inventories')
+        resp = restclient.get('/filters/inventories')
 
     # most likely a DNS issue
     except requests.exceptions.ConnectionError as c_error:
@@ -77,10 +76,10 @@ result = {
     "message": ""
 }
 
-handle_target = {
-    'tetration': test_tetration()
+test_connectivity = {
+    'TETRATION': test_tetration()
 }[os.environ['TARGET_TYPE']]
 
-result['status_code'] = handle_target[0]
-result['message'] = handle_target[1]
+result['status_code'] = test_connectivity[0]
+result['message'] = test_connectivity[1]
 print json.dumps(result)
