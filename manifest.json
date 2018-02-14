@@ -53,5 +53,16 @@
         "path": "https://github.com/techBeck03/Scratch/raw/master/ecoScripts/servicenow",
         "icon": "icon.png",
         "tags": "cmdb"
+    },
+    {
+        "name": "splunk",
+        "label": "Splunk Monitoring",
+        "versions": [
+            0.1
+        ],
+        "latest": 0.1,
+        "path": "https://github.com/techBeck03/Scratch/raw/master/ecoScripts/splunk",
+        "icon": "icon.png",
+        "tags": "cmdb"
     }
 ]
