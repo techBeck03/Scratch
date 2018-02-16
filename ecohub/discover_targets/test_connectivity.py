@@ -60,7 +60,7 @@ def test_tetration():
         status = resp.status_code
         # this doesn't work if the Tetration endpoint is specified as a valid
         # website (but not a TA endpoint) because it returns all of the HTML
-        # for the whole website 
+        # for the whole website
         if resp.status_code >= 400:
             return_msg = "Tetration " + str(resp.text).rstrip()
 

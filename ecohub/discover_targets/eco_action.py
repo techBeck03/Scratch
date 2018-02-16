@@ -13,10 +13,7 @@ def print_message(message):
     prints a JSON object with indentation if the DEBUG environment variable
     is set and without indentation if it is not set
     '''
-    if os.getenv('DEBUG'):
-        print json.dumps(message, indent=4)
-    else:
-        print json.dumps(message)
+    print json.dumps(message)
 
 # return a message that the container has started
 pigeon = {
