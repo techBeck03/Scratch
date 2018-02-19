@@ -74,7 +74,7 @@
                     "label": "VM Name",
                     "type": "switch",
                     "environment_variable_name": "ENABLE_VM_NAME",
-                    "value": false,
+                    "value": true,
                     "popover": "VM name",
                     "placeholder": "",
                     "order": 1,
@@ -93,36 +93,13 @@
                     ]
                 },
                 {
-                    "name": "vsphere_tags",
-                    "label": "vSphere Tags",
-                    "type": "switch",
-                    "environment_variable_name": "ENABLE_VM_TAGS",
-                    "value": false,
-                    "popover": "vSphere Tags (tag1=value1;tag2=value2;)",
-                    "placeholder": "",
-                    "order": 2,
-                    "verify": false,
-                    "children": [
-                        {
-                            "name": "vsphere_tags_annotation_name",
-                            "label": "Tetration Annotation Name",
-                            "type": "text",
-                            "environment_variable_name": "VSPHERE_TAGS_ANNOTATION_NAME",
-                            "value": "VM Name",
-                            "placeholder": "Tetration Annotation Name",
-                            "order": 1,
-                            "verify": false
-                        }
-                    ]
-                },
-                {
                     "name": "vm location",
                     "label": "VM Location",
                     "type": "switch",
                     "environment_variable_name": "ENABLE_VM_LOCATION",
-                    "value": false,
+                    "value": true,
                     "popover": "Location of VM (ESX Host/Cluster)",
-                    "order": 3,
+                    "order": 2,
                     "verify": false,
                     "children": [
                         {
@@ -138,13 +115,59 @@
                     ]
                 },
                 {
+                    "name": "vm_tags",
+                    "label": "VM Tags",
+                    "type": "switch",
+                    "environment_variable_name": "ENABLE_VM_TAGS",
+                    "value": false,
+                    "popover": "VM Tags (tag1=value1;tag2=value2;)",
+                    "placeholder": "",
+                    "order": 3,
+                    "verify": false,
+                    "children": [
+                        {
+                            "name": "vm_tags_annotation_name",
+                            "label": "Tetration Annotation Name",
+                            "type": "text",
+                            "environment_variable_name": "VM_TAGS_ANNOTATION_NAME",
+                            "value": "VM Tags",
+                            "placeholder": "Tetration Annotation Name",
+                            "order": 1,
+                            "verify": false
+                        }
+                    ]
+                },
+                {
+                    "name": "vm_attributes",
+                    "label": "Custom Attributes",
+                    "type": "switch",
+                    "environment_variable_name": "ENABLE_CUSTOM_ATTRIBUTES",
+                    "value": false,
+                    "popover": "Custom Attributes (att1=value1;att2=value2;)",
+                    "placeholder": "",
+                    "order": 4,
+                    "verify": false,
+                    "children": [
+                        {
+                            "name": "custom_attributes_annotation_name",
+                            "label": "Tetration Annotation Name",
+                            "type": "text",
+                            "environment_variable_name": "CUSTOM_ATTRIBUTES_ANNOTATION_NAME",
+                            "value": "VM Custom Attributes",
+                            "placeholder": "Tetration Annotation Name",
+                            "order": 1,
+                            "verify": false
+                        }
+                    ]
+                },
+                {
                     "name": "vm networks",
                     "label": "VM Networks",
                     "type": "switch",
                     "environment_variable_name": "ENABLE_VM_NETWORK",
                     "value": false,
                     "popover": "VM Networks (PortGroup-1,PortGroup-2)",
-                    "order": 4,
+                    "order": 5,
                     "verify": false,
                     "children": [
                         {
