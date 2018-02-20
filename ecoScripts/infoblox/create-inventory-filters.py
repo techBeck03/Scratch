@@ -79,18 +79,14 @@ def create_network_filters():
     hosts = infoblox.GetHost(filtered_hosts)
     for host in hosts:
         subnets.append(host["network"])
-    unique_subnets = list(set(subnets))
+    subnets = list(set(subnets))
     iblox_subnets = []
-    tet_subnets = []
-    for subnet in unique_subnets:
+    for subnet in subnets:
         net = infoblox.GetSubnet(subnet)
-        iblox_subnets.append(net)
-        tet_subnets.append(subnet)
+        iblox_subnets.append(net[0])
 
-    PrettyPrint(tet_subnets)
-    #tetration.AddSubnets(tet_subnets)
     PrettyPrint(iblox_subnets)
-    #tetration.CreateInventoryFilters(subnets)
+    tetration.CreateInventoryFilters(iblox_subnets)
     PIGEON.note.update({
         'status_code': 100,
         'message' : 'Pushing inventory filters to tetration',
@@ -98,7 +94,7 @@ def create_network_filters():
     })
     PIGEON.send()
     #tetration.PushInventoryFilters()
-    #tetration.SetSubnets(subnets)
+    #tetration.SetSubnets(unique_subnets)
     
 def main():
     PIGEON.note.update({
