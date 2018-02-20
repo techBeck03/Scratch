@@ -83,8 +83,7 @@ def create_network_filters():
     iblox_subnets = []
     for subnet in subnets:
         net = infoblox.GetSubnet(subnet)
-        PrettyPrint(net)
-        if "comment" in net:
+        if "comment" in net[0]:
             iblox_subnets.append(net[0])
 
     tetration.CreateInventoryFilters(iblox_subnets)
