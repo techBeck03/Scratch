@@ -13,7 +13,7 @@ import requests
 # GLOBALS
 # ------------------------------------------------------------------------------------
 # Read in environment variables
-QUERY_LIMIT = 10
+QUERY_LIMIT = 200
 ANNOTATION_CSV_FILENAME = 'user_annotations.csv'
 # Tetration
 TETRATION_ENDPOINT = os.environ['TETRATION_ENDPOINT']

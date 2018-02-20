@@ -12,9 +12,6 @@ import helpers
 # Define pigeon messenger
 PIGEON = helpers.Pigeon()
 
-# flag determines if this script has to echo content back to the screen; in
-# most cases the script that is called will do that so it's not required
-flag = False
 
 if os.getenv('ACTION'):
     PIGEON.note.update({

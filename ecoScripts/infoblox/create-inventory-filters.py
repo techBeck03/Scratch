@@ -77,7 +77,7 @@ def update_subnets():
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
         writer.writeheader()
-        for subnet in UNKNOWN_SUBNETS:
+        for subnet in list(set(UNKNOWN_SUBNETS)):
             writer.writerow({'subnet': subnet.__str__()})
 
 def create_network_filters():
@@ -109,9 +109,8 @@ def create_network_filters():
         'data' : {}
     })
     PIGEON.send()
-    #PrettyPrint(tetration.filters)
-    #tetration.PushInventoryFilters()
-    tetration.AddSubnets(list(set(tet_subnets)))
+    tetration.PushInventoryFilters()
+    tetration.AddSubnets(tet_subnets)
     
 def main():
     PIGEON.note.update({
@@ -135,7 +134,6 @@ def main():
         })
         PIGEON.send()
         tetration.GetInventory(filters=filters,dimensions=dimensions)
-        #PrettyPrint(tetration.inventory.pagedData)
         PIGEON.note.update({
             'status_code': 100,
             'message' : 'Creating inventory filters for observed networks',
@@ -145,7 +143,7 @@ def main():
         create_network_filters()
         if(tetration.inventory.hasNext is False):
            break
-        #time.sleep(20)
+        time.sleep(2)
     update_subnets()
     PIGEON.note.update({
         'status_code': 200,
