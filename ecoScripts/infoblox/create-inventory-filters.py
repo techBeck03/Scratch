@@ -86,6 +86,7 @@ def create_network_filters():
         if "comment" in net[0]:
             iblox_subnets.append(net[0])
 
+    print("found {count} new subnets").format(count=len(iblox_subnets))
     tetration.CreateInventoryFilters(iblox_subnets)
     PIGEON.note.update({
         'status_code': 100,
@@ -114,7 +115,7 @@ def main():
     while True:
         PIGEON.note.update({
             'status_code': 100,
-            'message' : 'Retrieving next ' + str(QUERY_LIMIT) + 'hosts from tetration inventory',
+            'message' : 'Retrieving next ' + str(QUERY_LIMIT) + ' hosts from tetration inventory',
             'data' : {}
         })
         PIGEON.send()
