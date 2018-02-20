@@ -14,9 +14,9 @@ import csv
 QUERY_LIMIT = 200
 UNKNOWN_SUBNETS = []
 # Read in environment variables
-KNOWN_SUBNETS_CSV = 'known_subnets.csv'
-UNKNOWN_SUBNETS_CSV = 'unknown_subnets.csv'
-FILTER_CSV_FILENAME ='inventory_filters.csv'
+KNOWN_SUBNETS_CSV = '/private/known_subnets.csv'
+UNKNOWN_SUBNETS_CSV = '/public/unknown_subnets.csv'
+FILTER_CSV_FILENAME ='/private/inventory_filters.csv'
 # Tetration
 TETRATION_ENDPOINT = os.environ['TETRATION_ENDPOINT']
 TETRATION_API_KEY = os.environ['TETRATION_API_KEY']

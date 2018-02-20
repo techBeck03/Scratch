@@ -14,7 +14,7 @@ import requests
 # ------------------------------------------------------------------------------------
 # Read in environment variables
 QUERY_LIMIT = 200
-ANNOTATION_CSV_FILENAME = 'user_annotations.csv'
+ANNOTATION_CSV_FILENAME = '/private/user_annotations.csv'
 # Tetration
 TETRATION_ENDPOINT = os.environ['TETRATION_ENDPOINT']
 TETRATION_API_KEY = os.environ['TETRATION_API_KEY']
