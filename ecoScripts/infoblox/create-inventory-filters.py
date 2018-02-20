@@ -87,7 +87,8 @@ def create_network_filters():
         iblox_subnets.append(net)
         tet_subnets.append(subnet)
 
-    tetration.AddSubnets(tet_subnets)
+    PrettyPrint(tet_subnets)
+    #tetration.AddSubnets(tet_subnets)
     PrettyPrint(iblox_subnets)
     #tetration.CreateInventoryFilters(subnets)
     PIGEON.note.update({
