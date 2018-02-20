@@ -75,8 +75,10 @@ def create_network_filters():
     subnets = []
     for host in tetration.inventory.pagedData:
         if(not tetration.HasSubnetFilterForIp(host["ip"])):
+            print "inside not statement"
             filtered_hosts.append(host)
     hosts = infoblox.GetHost(filtered_hosts)
+    PrettyPrint(hosts)
     for host in hosts:
         subnets.append(host["network"])
     subnets = []
