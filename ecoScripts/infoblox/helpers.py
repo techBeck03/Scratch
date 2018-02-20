@@ -192,7 +192,8 @@ class Tetration_Helper(object):
 
     def HasSubnetFilterForIp(self,ip):
         for subnet in self.subnets:
-            if subnet.__contains__(IPAddress(ip)) is True:
+            addr = IPAddress(ip)
+            if subnet.__contains__(addr) is True or addr.is_private() is not True:
                 return True
         return False
 
