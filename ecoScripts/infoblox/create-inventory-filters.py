@@ -99,7 +99,7 @@ def create_network_filters():
             tet_subnets.append(net[0]["network"])
         else:
             print "no comment in network"
-            PrettyPrint(net[0]["network"])
+            print net[0]["network"]
             UNKNOWN_SUBNETS.append(net[0]["network"])
 
     tetration.CreateInventoryFilters(iblox_subnets)
