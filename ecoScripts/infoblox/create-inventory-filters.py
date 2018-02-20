@@ -96,6 +96,8 @@ def create_network_filters():
         if "comment" in net[0]:
             iblox_subnets.append(net[0])
         else:
+            print "no comment in network"
+            PrettyPrint(net[0]["network"])
             UNKNOWN_SUBNETS.append(net[0]["network"])
 
     tetration.CreateInventoryFilters(iblox_subnets)
