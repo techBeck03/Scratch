@@ -111,7 +111,7 @@ def main():
     while True:
         PIGEON.note.update({
             'status_code': 100,
-            'message' : 'Retrieving next ' + QUERY_LIMIT + 'hosts from tetration inventory',
+            'message' : 'Retrieving next ' + str(QUERY_LIMIT) + 'hosts from tetration inventory',
             'data' : {}
         })
         PIGEON.send()

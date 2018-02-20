@@ -27,7 +27,7 @@ if os.getenv('ACTION'):
         'TEST_CONNECTIVITY': subprocess.call(["python", "test_connectivity.py"]),
         'RUN_INTEGRATION': subprocess.call(["python", "annotate-host.py"]),
         'CREATE_FILTERS': subprocess.call(["python", "create-inventory-filters.py"]),
-        'FETCH_ITEMS': subprocess.call(["python", "fetch-items.py"]),
+        'FETCH_ITEMS': subprocess.call(["python", "fetch-items.py"])
     }[os.environ['ACTION']]
 else:
     PIGEON.note.update({
@@ -40,7 +40,7 @@ else:
 # print a message that the container has completed its work
 PIGEON.note.update({
     'status_code': 100,
-    'message' : 'All actions completed',
+    'message' : 'Action complete',
     'data' : {}
 })
 PIGEON.send()
