@@ -1,10 +1,12 @@
 from tetpyclient import RestClient
 import tetpyclient
+from infoblox_client import connector
 import json
 import os
 import requests.packages.urllib3
 import csv
 from requests.auth import HTTPBasicAuth
+from netaddr import *
 
 requests.packages.urllib3.disable_warnings()
 
@@ -53,12 +55,13 @@ class Tetration_Helper(object):
         else:
             self.scopes = resp.json()
 
-    def GetInventory(self, filters):
+    def GetInventory(self, filters=None, dimensions=None):
         req_payload = {
             "filter": {
                 "type": "or",
                 "filters": filters
             },
+            "dimensions": dimensions,
             "limit": self.options["limit"],
             "offset": self.inventory.offset if self.inventory else ""
         }
@@ -138,7 +141,6 @@ class Tetration_Helper(object):
             writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
             writer.writeheader()
             for host in hosts:
-                host = host[0]
                 hostDict = {}
                 hostDict["IP"] = host["ip_address"]
                 hostDict["VRF"] = [ tetHost["vrf_name"] for tetHost in self.inventory.pagedData if tetHost["ip"] == host["ip_address"] ][0]
@@ -162,12 +164,33 @@ class Tetration_Helper(object):
                     else:
                         hostDict[column["annotationName"]] = host[column["infobloxName"]]
                 writer.writerow(hostDict)
-        '''
         keys = ['IP', 'VRF']
         req_payload = [tetpyclient.MultiPartOption(key='X-Tetration-Key', val=keys), tetpyclient.MultiPartOption(key='X-Tetration-Oper', val='add')]
-        resp = rc.upload(csvFile, '/assets/cmdb/upload', req_payload)
+        resp = self.rc.upload(csvFile, '/assets/cmdb/upload', req_payload)
         if resp.status_code != 200:
             print("Error posting annotations to Tetration cluster")
         else:
             print("Successfully posted annotations to Tetration cluster")
-        '''
+
+class Infoblox_Helper(object):
+    def __init__ (self,opts=None,subnets=None,pigeon=None):
+        self.infoblox = connector.Connector(opts)
+        self.pigeon = pigeon
+        self.subnets = subnets
+
+    def GetInfobloxHost(self,pagedData):
+        host_list = []
+        for host in pagedData:
+            host_list.append(self.infoblox.get_object('ipv4address',{'ip_address': host["ip"],'_return_fields': 'network,network_view,names,ip_address,extattrs'}))
+            
+        return [host[0] for host in host_list if host != None]
+
+    def setSubnets(self,subnets):
+        self.subnets = subnets
+
+    def inExistingSubnet(self,ip):
+        for subnet in self.subnets:
+            sub = IPNetwork(subnet)
+            if sub.__contains__(ip) is True:
+                return True
+        return False

@@ -1,0 +1,115 @@
+import os 
+from infoblox_client import connector
+import yaml
+import json
+from helpers import *
+import sys
+import os
+import netaddr
+import time
+import requests
+
+# ====================================================================================
+# GLOBALS
+# ------------------------------------------------------------------------------------
+# Read in environment variables
+QUERY_LIMIT = 10
+ANNOTATION_CSV_FILENAME = 'user_annotations.csv'
+# Tetration
+TETRATION_ENDPOINT = os.environ['TETRATION_ENDPOINT']
+TETRATION_API_KEY = os.environ['TETRATION_API_KEY']
+TETRATION_API_SECRET = os.environ['TETRATION_API_SECRET']
+TETRATION_OPTS = {
+    'limit': QUERY_LIMIT
+}
+
+# Infoblox
+INFOBLOX_OPTS = {
+    'host': os.environ['INFOBLOX_HOST'],
+    'username': os.environ['INFOBLOX_USER'],
+    'password': os.environ['INFOBLOX_PWD'],
+    'ssl_verify': False,
+    'silent_ssl_warnings': True, # change from default
+    'http_request_timeout': 3,   # change from default
+    'http_pool_connections': 10,
+    'http_pool_maxsize': 10,
+    'max_retries': 2,            # change from default
+    'wapi_version': '2.5',
+    'max_results': QUERY_LIMIT,            # change from default
+    'log_api_calls_as_info': False,
+    'paging': False
+}
+
+# Annotation Options
+
+COLUMNS = {
+    "annotate_hostname": {
+        "enabled": os.environ['ENABLE_HOSTNAME'],
+        "annotationName": os.environ['HOSTNAME_ANNOTATION_NAME'],
+        "infobloxName": "names"
+    },
+    "annotate_zone": {
+        "enabled": os.environ['ENABLE_ZONE'],
+        "annotationName": os.environ['ZONE_ANNOTATION_NAME'],
+        "infobloxName": "zone"
+    },
+    "annotate_view": {
+        "enabled": os.environ['ENABLE_NETWORK_VIEW'],
+        "annotationName": os.environ['NETWORK_VIEW_ANNOTATION_NAME'],
+        "infobloxName": "network_view"
+    },
+    "annotate_parent": {
+        "enabled": os.environ['ENABLE_SUBNET'],
+        "annotationName": os.environ['SUBNET_ANNOTATION_NAME'],
+        "infobloxName": "network"
+    },
+    "annotate_extensible_attributes": {
+        "enabled": os.environ['ENABLE_EA'],
+        "annotationName": os.environ['EA_ANNOTATION_NAME'],
+        "infobloxName": "extattrs",
+        "overload": os.environ['OVERLOAD_EA'],
+        "attrList" : (os.getenv('EA_LIST')).split(',')
+    }
+}
+
+# Pigeon Messenger
+PIGEON = Pigeon()
+# Connect to infoblox
+infoblox = Infoblox_Helper(opts=INFOBLOX_OPTS,pigeon=PIGEON)
+# Connect to tetration   
+tetration = Tetration_Helper(TETRATION_ENDPOINT, TETRATION_API_KEY, TETRATION_API_SECRET,PIGEON,TETRATION_OPTS)
+
+# Debug function used for printing formatted dictionaries
+def PrettyPrint(target):
+    print json.dumps(target,sort_keys=True,indent=4)
+
+def get_undocumented_inventory():
+    PIGEON.letter.update({
+        'status_code': 100,
+        'message' : 'Getting undocumented hosts from tetration',
+        'data' : {}
+    })
+    PIGEON.send()
+    filters = []
+    #for annotation in {k:v for k,v in COLUMNS.iteritems() if v["enabled"] == "on" }:
+    for annotation in [COLUMNS[column] for column in COLUMNS if COLUMNS[column]["enabled"] == "on" ]:
+        filters.append({
+            "type": "eq",
+            "field": "user_" + annotation["annotationName"],
+            "value": ""
+        })
+    tetration.GetInventory(filters)
+
+def main():
+    columns = [COLUMNS[column] for column in COLUMNS if COLUMNS[column]["enabled"] == "on" ]
+    while True:
+        if len(columns) > 0:
+            get_undocumented_inventory()
+            host_list = infoblox.GetInfobloxHost(tetration.inventory.pagedData)
+            tetration.AnnotateHosts(host_list,columns,ANNOTATION_CSV_FILENAME)
+        if(tetration.inventory.hasNext is False):
+           exit(0)
+        time.sleep(2)
+
+if __name__ == "__main__":
+    main()
