@@ -20,12 +20,13 @@ if os.getenv('ACTION'):
         'data' : {}
     })
     PIGEON.send()
-    result = {
-        'TEST_CONNECTIVITY': subprocess.call(["python", "test_connectivity.py"]),
-        'RUN_INTEGRATION': subprocess.call(["python", "annotate-host.py"]),
-        'CREATE_FILTERS': subprocess.call(["python", "create-inventory-filters.py"]),
-        'FETCH_ITEMS': subprocess.call(["python", "fetch-items.py"])
-    }[os.environ['ACTION']]
+    options = {
+        'TEST_CONNECTIVITY': lambda : subprocess.call(["python", "test_connectivity.py"]),
+        'RUN_INTEGRATION': lambda : subprocess.call(["python", "annotate-host.py"]),
+        'CREATE_FILTERS': lambda : subprocess.call(["python", "create-inventory-filters.py"]),
+        'FETCH_ITEMS': lambda: subprocess.call(["python", "fetch-items.py"])
+    }
+    result = options[os.environ['ACTION']]()
 else:
     PIGEON.note.update({
         'status_code': 404,
