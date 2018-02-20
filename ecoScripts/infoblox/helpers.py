@@ -186,7 +186,7 @@ class Tetration_Helper(object):
             })
             self.pigeon.send()
 
-    def SetSubnets(self,subnets):
+    def AddSubnets(self,subnets):
         for subnet in subnets:
             self.subnets.append(IPNetwork(subnet))
 

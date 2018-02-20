@@ -58,7 +58,7 @@ def load_known_subnets():
             reader = csv.DictReader(csvfile)
             for row in reader:
                 known_subnets.append(row["subnet"])
-        tetration.SetSubnets(known_subnets)
+        tetration.AddSubnets(known_subnets)
 
 def update_subnets():
     with open(KNOWN_SUBNETS_CSV, 'w') as csvfile:
@@ -75,17 +75,20 @@ def create_network_filters():
     subnets = []
     for host in tetration.inventory.pagedData:
         if(not tetration.HasSubnetFilterForIp(host["ip"])):
-            print "inside not statement"
             filtered_hosts.append(host)
     hosts = infoblox.GetHost(filtered_hosts)
-    PrettyPrint(hosts)
     for host in hosts:
         subnets.append(host["network"])
-    subnets = []
-    for subnet in list(set(subnets)):
-        subnets.append(infoblox.GetSubnet(subnet))
-        
-    PrettyPrint(subnets)
+    unique_subnets = list(set(subnets))
+    iblox_subnets = []
+    tet_subnets = []
+    for subnet in unique_subnets:
+        net = infoblox.GetSubnet(subnet)
+        iblox_subnets.append(net)
+        tet_subnets.append(subnet)
+
+    tetration.AddSubnets(tet_subnets)
+    PrettyPrint(iblox_subnets)
     #tetration.CreateInventoryFilters(subnets)
     PIGEON.note.update({
         'status_code': 100,
