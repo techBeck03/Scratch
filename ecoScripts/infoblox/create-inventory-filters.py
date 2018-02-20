@@ -78,7 +78,6 @@ def create_network_filters():
         if(not tetration.HasSubnetFilterForIp(host["ip"])):
             filtered_hosts.append(host)
     print("filtered count = {count}").format(count=len(filtered_hosts))
-    PrettyPrint(filtered_hosts)
     hosts = infoblox.GetHost(filtered_hosts)
     for host in hosts:
         subnets.append(host["network"])
