@@ -83,6 +83,7 @@ def create_network_filters():
         subnets.append(host["network"])
     subnets = list(set(subnets))
     iblox_subnets = []
+    PrettyPrint(subnets)
     for subnet in subnets:
         net = infoblox.GetSubnet(subnet)
         if "comment" in net[0]:
