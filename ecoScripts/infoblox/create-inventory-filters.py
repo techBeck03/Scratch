@@ -11,9 +11,11 @@ import csv
 # ====================================================================================
 # GLOBALS
 # ------------------------------------------------------------------------------------
-# Read in environment variables
 QUERY_LIMIT = 200
+UNKNOWN_SUBNETS = []
+# Read in environment variables
 KNOWN_SUBNETS_CSV = 'known_subnets.csv'
+UNKNOWN_SUBNETS_CSV = 'unknown_subnets.csv'
 FILTER_CSV_FILENAME ='inventory_filters.csv'
 # Tetration
 TETRATION_ENDPOINT = os.environ['TETRATION_ENDPOINT']
@@ -42,6 +44,7 @@ INFOBLOX_OPTS = {
 
 # Pigeon Messenger
 PIGEON = Pigeon()
+
 # Connect to infoblox
 infoblox = Infoblox_Helper(opts=INFOBLOX_OPTS,pigeon=PIGEON)
 # Connect to tetration   
@@ -69,15 +72,20 @@ def update_subnets():
         for subnet in tetration.subnets:
             writer.writerow({'subnet': subnet.__str__()})
 
+    with open(UNKNOWN_SUBNETS_CSV, 'w') as csvfile:
+        fieldnames = ['subnet']
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+        writer.writeheader()
+        for subnet in UNKNOWN_SUBNETS:
+            writer.writerow({'subnet': subnet.__str__()})
 
 def create_network_filters():
     filtered_hosts = []
     subnets = []
-    print("unfiltered count = {count}").format(count=len(tetration.inventory.pagedData))
     for host in tetration.inventory.pagedData:
         if(not tetration.HasSubnetFilterForIp(host["ip"])):
             filtered_hosts.append(host)
-    print("filtered count = {count}").format(count=len(filtered_hosts))
     hosts = infoblox.GetHost(filtered_hosts)
     for host in hosts:
         subnets.append(host["network"])
@@ -87,8 +95,9 @@ def create_network_filters():
         net = infoblox.GetSubnet(subnet)
         if "comment" in net[0]:
             iblox_subnets.append(net[0])
+        else:
+            UNKNOWN_SUBNETS.append(net[0]["network"])
 
-    print("found {count} new subnets").format(count=len(iblox_subnets))
     tetration.CreateInventoryFilters(iblox_subnets)
     PIGEON.note.update({
         'status_code': 100,
