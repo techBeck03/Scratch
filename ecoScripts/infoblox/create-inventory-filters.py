@@ -111,7 +111,7 @@ def create_network_filters():
     PIGEON.send()
     #PrettyPrint(tetration.filters)
     #tetration.PushInventoryFilters()
-    tetration.AddSubnets(tet_subnets)
+    tetration.AddSubnets(list(set(tet_subnets)))
     
 def main():
     PIGEON.note.update({
