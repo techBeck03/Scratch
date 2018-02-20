@@ -12,7 +12,7 @@ import csv
 # GLOBALS
 # ------------------------------------------------------------------------------------
 # Read in environment variables
-QUERY_LIMIT = 20
+QUERY_LIMIT = 200
 KNOWN_SUBNETS_CSV = 'known_subnets.csv'
 FILTER_CSV_FILENAME ='inventory_filters.csv'
 # Tetration
@@ -85,7 +85,6 @@ def create_network_filters():
         net = infoblox.GetSubnet(subnet)
         iblox_subnets.append(net[0])
 
-    PrettyPrint(iblox_subnets)
     tetration.CreateInventoryFilters(iblox_subnets)
     PIGEON.note.update({
         'status_code': 100,
@@ -93,6 +92,7 @@ def create_network_filters():
         'data' : {}
     })
     PIGEON.send()
+    PrettyPrint(tetration.filters)
     #tetration.PushInventoryFilters()
     #tetration.SetSubnets(unique_subnets)
     
@@ -128,7 +128,7 @@ def main():
         create_network_filters()
         if(tetration.inventory.hasNext is False):
            break
-        time.sleep(20)
+        #time.sleep(20)
     update_subnets()
     PIGEON.note.update({
         'status_code': 200,
