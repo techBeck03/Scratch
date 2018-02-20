@@ -83,6 +83,7 @@ def create_network_filters():
     iblox_subnets = []
     for subnet in subnets:
         net = infoblox.GetSubnet(subnet)
+        PrettyPrint(net)
         if "comment" in net:
             iblox_subnets.append(net[0])
 
@@ -93,7 +94,7 @@ def create_network_filters():
         'data' : {}
     })
     PIGEON.send()
-    PrettyPrint(tetration.filters)
+    #PrettyPrint(tetration.filters)
     #tetration.PushInventoryFilters()
     tetration.AddSubnets(subnets)
     
