@@ -199,14 +199,14 @@ class Tetration_Helper(object):
 
 class Infoblox_Helper(object):
     def __init__ (self,opts=None,pigeon=None):
-        self.infoblox = connector.Connector(opts)
+        self.client = connector.Connector(opts)
         self.pigeon = pigeon
 
     def GetHost(self,pagedData):
         host_list = []
         try:
             for host in pagedData:
-                host_list.append(self.infoblox.get_object('ipv4address',{'ip_address': host["ip"],'_return_fields': 'network,network_view,names,ip_address,extattrs'}))
+                host_list.append(self.client.get_object('ipv4address',{'ip_address': host["ip"],'_return_fields': 'network,network_view,names,ip_address,extattrs'}))
                 
             return [host[0] for host in host_list if host != None]
         except:
@@ -219,7 +219,7 @@ class Infoblox_Helper(object):
 
     def GetSubnet(self,subnet):
         try:
-            return self.infoblox.get_object('network',{'network': subnet})
+            return self.client.get_object('network',{'network': subnet})
         except:
             self.pigeon.note.update({
                 'status_code': 303,
@@ -230,7 +230,7 @@ class Infoblox_Helper(object):
 
     def GetExtensibleAttributes(self):
         try:
-            return self.infoblox.get_object('extensibleattributedef',{'_return_fields': 'name'})
+            return self.client.get_object('extensibleattributedef',{'_return_fields': 'name'})
         except:
             self.pigeon.note.update({
                 'status_code': 303,
