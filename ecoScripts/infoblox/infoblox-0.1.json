@@ -144,6 +144,41 @@
                             "placeholder": "Tetration Annotation Name",
                             "order": 1,
                             "verify": false
+                        },
+                        {
+                            "name": "ea_list",
+                            "label": "Extensible Attributes",
+                            "type": "fetch-multiple",
+                            "fetch_target": "EXT_ATTRS",
+                            "environment_variable_name": "EA_LIST",
+                            "value": "",
+                            "placeholder": "Extensible Attributes",
+                            "popover": "Select EAs for annotation",
+                            "order": 1,
+                            "verify": false
+                        }
+                    ]
+                },
+                {
+                    "name": "inventory_filters",
+                    "label": "Inventory Filters",
+                    "type": "switch",
+                    "environment_variable_name": "ENABLE_INVENTORY_FILTERS",
+                    "value": "off",
+                    "popover": "Create tetration inventory filters for documented networks",
+                    "order": 5,
+                    "verify": true,
+                    "children": [
+                        {
+                            "name": "scope_list",
+                            "label": "Tetration App Scopes",
+                            "type": "fetch-single",
+                            "fetch_target": "APP_SCOPE",
+                            "environment_variable_name": "APP_SCOPE",
+                            "value": "",
+                            "placeholder": "App Scope ID",
+                            "order": 1,
+                            "verify": false
                         }
                     ]
                 }

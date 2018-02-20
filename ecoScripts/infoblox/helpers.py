@@ -12,14 +12,14 @@ requests.packages.urllib3.disable_warnings()
 
 class Pigeon(object):
     def __init__(self):
-        self.letter = {
+        self.note = {
             "status_code" : 0,
             "message" : "",
             "data" : {}
         }
 
     def send(self):
-        print json.dumps(self.letter)
+        print json.dumps(self.note)
 
       
 class Tetration_Helper(object):
@@ -35,6 +35,7 @@ class Tetration_Helper(object):
         self.inventory = self.Inventory()
         self.filters = {}
         self.options = options
+        self.subnets = []
 
     def GetSearchDimensions(self):
         resp = self.rc.get('/inventory/search/dimensions')
@@ -44,7 +45,7 @@ class Tetration_Helper(object):
         resp = self.rc.get('/app_scopes')
         if resp.status_code != 200:
             self.pigeon.status_code = '403'
-            self.pigeon.letter.update({
+            self.pigeon.note.update({
                 'status_code': 403,
                 'message' : 'Unable to get application scopes from tetration cluster',
                 'data' : {}
@@ -67,7 +68,7 @@ class Tetration_Helper(object):
         }
         resp = self.rc.post('/inventory/search',json_body=json.dumps(req_payload))
         if resp.status_code != 200:
-            self.pigeon.letter.update({
+            self.pigeon.note.update({
                 'status_code': 403,
                 'message' : 'Unable to get inventory from tetration cluster',
                 'data' : {}
@@ -75,6 +76,12 @@ class Tetration_Helper(object):
             self.pigeon.send()
             exit(0)
         else:
+            self.pigeon.note.update({
+                'status_code': 100,
+                'message' : 'Successfully retrieved inventory page from Tetration',
+                'data' : {}
+            })
+            self.pigeon.send()
             resp = resp.json()
             self.inventory.pagedData = resp['results']
             self.inventory.offset = resp['offset'] if 'offset' in resp else ''
@@ -83,17 +90,7 @@ class Tetration_Helper(object):
 
     def CreateInventoryFilters(self,network_list):
         inventoryDict = {}
-        appScopeName = os.getenv('APP_SCOPE_NAME',default='Default')
-        try:
-            appScopeId = [scope["id"] for scope in self.scopes if scope["name"] == appScopeName][0]
-        except:
-            self.pigeon.letter.update({
-                'status_code': 403,
-                'message' : 'Unable to find app scope id for: ' + appScopeName,
-                'data' : {}
-            })
-            self.pigeon.send()
-            exit(0)
+        appScopeId = os.getenv('APP_SCOPE_ID',default='Default')
         for row in network_list:
             if row['comment'] not in inventoryDict:
                 inventoryDict[row['comment']] = {}
@@ -117,13 +114,19 @@ class Tetration_Helper(object):
             req_payload = self.filters[inventoryFilter]
             resp = self.rc.post('/filters/inventories', json_body=json.dumps(req_payload))
         if resp.status_code != 200:
-            self.pigeon.letter.update({
+            self.pigeon.note.update({
                 'status_code': 403,
                 'message' : 'Error pushing inventory filters to tetration cluster',
                 'data' : {}
             })
             self.pigeon.send()
-            exit(0)
+            return
+        self.pigeon.note.update({
+            'status_code': 100,
+            'message' : 'Successfully posted inventory filters to Tetration cluster',
+            'data' : {}
+        })
+        self.pigeon.send()
         return
 
     def AnnotateHosts(self,hosts,columns,csvFile):
@@ -168,29 +171,69 @@ class Tetration_Helper(object):
         req_payload = [tetpyclient.MultiPartOption(key='X-Tetration-Key', val=keys), tetpyclient.MultiPartOption(key='X-Tetration-Oper', val='add')]
         resp = self.rc.upload(csvFile, '/assets/cmdb/upload', req_payload)
         if resp.status_code != 200:
-            print("Error posting annotations to Tetration cluster")
+            self.pigeon.note.update({
+                'status_code': 403,
+                'message' : 'Error posting annotations to Tetration cluster',
+                'data' : {}
+            })
+            self.pigeon.send()
+            return
         else:
-            print("Successfully posted annotations to Tetration cluster")
+            self.pigeon.note.update({
+                'status_code': 100,
+                'message' : 'Successfully posted annotations to Tetration cluster',
+                'data' : {}
+            })
+            self.pigeon.send()
 
-class Infoblox_Helper(object):
-    def __init__ (self,opts=None,subnets=None,pigeon=None):
-        self.infoblox = connector.Connector(opts)
-        self.pigeon = pigeon
-        self.subnets = subnets
+    def SetSubnets(self,subnets):
+        for subnet in subnets:
+            self.subnets.append(IPNetwork(subnet))
 
-    def GetInfobloxHost(self,pagedData):
-        host_list = []
-        for host in pagedData:
-            host_list.append(self.infoblox.get_object('ipv4address',{'ip_address': host["ip"],'_return_fields': 'network,network_view,names,ip_address,extattrs'}))
-            
-        return [host[0] for host in host_list if host != None]
-
-    def setSubnets(self,subnets):
-        self.subnets = subnets
-
-    def inExistingSubnet(self,ip):
+    def HasSubnetFilterForIp(self,ip):
         for subnet in self.subnets:
-            sub = IPNetwork(subnet)
-            if sub.__contains__(ip) is True:
+            if subnet.__contains__(IPAddress(ip)) is True:
                 return True
         return False
+
+class Infoblox_Helper(object):
+    def __init__ (self,opts=None,pigeon=None):
+        self.infoblox = connector.Connector(opts)
+        self.pigeon = pigeon
+
+    def GetHost(self,pagedData):
+        host_list = []
+        try:
+            for host in pagedData:
+                host_list.append(self.infoblox.get_object('ipv4address',{'ip_address': host["ip"],'_return_fields': 'network,network_view,names,ip_address,extattrs'}))
+                
+            return [host[0] for host in host_list if host != None]
+        except:
+            self.pigeon.note.update({
+                'status_code': 303,
+                'message' : 'Error getting host from infoblox',
+                'data' : {}
+            })
+            self.pigeon.send()
+
+    def GetSubnet(self,subnet):
+        try:
+            return self.infoblox.get_object('network',{'network': subnet})
+        except:
+            self.pigeon.note.update({
+                'status_code': 303,
+                'message' : 'Error getting subnet from infoblox',
+                'data' : {}
+            })
+            self.pigeon.send()
+
+    def GetExtensibleAttributes(self):
+        try:
+            return self.infoblox.get_object('extensibleattributedef',{'_return_fields': 'name'})
+        except:
+            self.pigeon.note.update({
+                'status_code': 303,
+                'message' : 'Error getting extensible attributes from infoblox',
+                'data' : {}
+            })
+            self.pigeon.send()

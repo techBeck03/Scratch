@@ -83,8 +83,8 @@ tetration = Tetration_Helper(TETRATION_ENDPOINT, TETRATION_API_KEY, TETRATION_AP
 def PrettyPrint(target):
     print json.dumps(target,sort_keys=True,indent=4)
 
-def get_undocumented_inventory():
-    PIGEON.letter.update({
+def get_undocumented_inventory(columns):
+    PIGEON.note.update({
         'status_code': 100,
         'message' : 'Getting undocumented hosts from tetration',
         'data' : {}
@@ -92,7 +92,7 @@ def get_undocumented_inventory():
     PIGEON.send()
     filters = []
     #for annotation in {k:v for k,v in COLUMNS.iteritems() if v["enabled"] == "on" }:
-    for annotation in [COLUMNS[column] for column in COLUMNS if COLUMNS[column]["enabled"] == "on" ]:
+    for annotation in columns:
         filters.append({
             "type": "eq",
             "field": "user_" + annotation["annotationName"],
@@ -101,15 +101,51 @@ def get_undocumented_inventory():
     tetration.GetInventory(filters)
 
 def main():
+    PIGEON.note.update({
+        'status_code': 100,
+        'message' : 'Starting tasks for infoblox host annotations',
+        'data' : {}
+    })
+    PIGEON.send()
     columns = [COLUMNS[column] for column in COLUMNS if COLUMNS[column]["enabled"] == "on" ]
     while True:
         if len(columns) > 0:
-            get_undocumented_inventory()
-            host_list = infoblox.GetInfobloxHost(tetration.inventory.pagedData)
+            PIGEON.note.update({
+                'status_code': 100,
+                'message' : 'Retrieving next ' + QUERY_LIMIT + 'undocumented hosts from tetration inventory',
+                'data' : {}
+            })
+            PIGEON.send()
+            get_undocumented_inventory(columns)
+            PIGEON.note.update({
+                'status_code': 100,
+                'message' : 'Retrieving host information from infoblox',
+                'data' : {}
+            })
+            PIGEON.send()
+            host_list = infoblox.GetHost(tetration.inventory.pagedData)
+            PIGEON.note.update({
+                'status_code': 100,
+                'message' : 'Creating tetration annotations for hosts',
+                'data' : {}
+            })
+            PIGEON.send()
             tetration.AnnotateHosts(host_list,columns,ANNOTATION_CSV_FILENAME)
-        if(tetration.inventory.hasNext is False):
-           exit(0)
-        time.sleep(2)
-
+            if(tetration.inventory.hasNext is False):
+                break
+            time.sleep(2)
+        else:
+            PIGEON.note.update({
+                'status_code': 300,
+                'message' : 'No infoblox annotations enabled',
+                'data' : {}
+            })
+            PIGEON.send()
+    PIGEON.note.update({
+        'status_code': 200,
+        'message' : 'All tasks completed for infoblox host annotations',
+        'data' : {}
+    })
+    PIGEON.send()
 if __name__ == "__main__":
     main()
