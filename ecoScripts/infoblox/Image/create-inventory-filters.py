@@ -36,7 +36,7 @@ INFOBLOX_OPTS = {
     'http_pool_connections': 10,
     'http_pool_maxsize': 10,
     'max_retries': 2,            # change from default
-    'wapi_version': '2.5',
+    'wapi_version': '2.2',
     'max_results': QUERY_LIMIT,            # change from default
     'log_api_calls_as_info': False,
     'paging': False

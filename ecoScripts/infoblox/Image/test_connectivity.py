@@ -45,7 +45,7 @@ def test_infoblox():
         'http_pool_connections': 10,
         'http_pool_maxsize': 10,
         'max_retries': 2,            # change from default
-        'wapi_version': os.environ['INFOBLOX_WAPI_VERSION'],
+        'wapi_version': '2.2',
         'max_results': 2,            # change from default
         'log_api_calls_as_info': False,
         'paging': False
