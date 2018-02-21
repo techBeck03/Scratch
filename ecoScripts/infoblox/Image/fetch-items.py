@@ -87,7 +87,7 @@ def main():
     PIGEON.note.update({
         'status_code': 200,
         'message' : 'All tasks completed for fetch items',
-        'data' : json.dumps(fetch_result)
+        'data' : fetch_result
     })
     PIGEON.send()
 
