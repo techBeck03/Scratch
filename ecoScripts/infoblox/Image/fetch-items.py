@@ -87,7 +87,7 @@ def main():
     PIGEON.note.update({
         'status_code': 200,
         'message' : 'All tasks completed for infoblox inventory filters',
-        'data' : fetch_result[0]
+        'data' : fetch_result
     })
     PIGEON.send()
 

@@ -113,14 +113,14 @@ class Tetration_Helper(object):
         for inventoryFilter in self.filters:
             req_payload = self.filters[inventoryFilter]
             resp = self.rc.post('/filters/inventories', json_body=json.dumps(req_payload))
-        if resp.status_code != 200:
-            self.pigeon.note.update({
-                'status_code': 403,
-                'message' : 'Error pushing inventory filters to tetration cluster',
-                'data' : {}
-            })
-            self.pigeon.send()
-            return
+            if resp.status_code != 200:
+                self.pigeon.note.update({
+                    'status_code': 403,
+                    'message' : 'Error pushing inventory filters to tetration cluster',
+                    'data' : {}
+                })
+                self.pigeon.send()
+                return
         self.pigeon.note.update({
             'status_code': 100,
             'message' : 'Successfully posted inventory filters to Tetration cluster',
