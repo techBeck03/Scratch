@@ -21,7 +21,10 @@ class Pigeon(object):
     def send(self):
         print json.dumps(self.note)
 
-      
+class Boolean_Helper(object):
+    def GetBoolean(self,testVar):
+        return testVar.lower() in ['true','on','yes','1']
+
 class Tetration_Helper(object):
     class Inventory(object):
         offset = ''
@@ -36,6 +39,7 @@ class Tetration_Helper(object):
         self.filters = {}
         self.options = options
         self.subnets = []
+        self.boolean = Boolean_Helper()
 
     def GetSearchDimensions(self):
         resp = self.rc.get('/inventory/search/dimensions')
@@ -96,7 +100,7 @@ class Tetration_Helper(object):
                 inventoryDict[row['comment']] = {}
                 inventoryDict[row['comment']]['app_scope_id'] = appScopeId
                 inventoryDict[row['comment']]['name'] = row['comment']
-                inventoryDict[row['comment']]['primary'] = os.getenv('SCOPE_RESTRICTED',default=False)
+                inventoryDict[row['comment']]['primary'] = "TRUE" if self.boolean.GetBoolean(os.getenv('SCOPE_RESTRICTED',default=False)) else "FALSE"
                 inventoryDict[row['comment']]['query'] = {
                     "type" : "or",
                     "filters" : []
@@ -201,6 +205,7 @@ class Infoblox_Helper(object):
     def __init__ (self,opts=None,pigeon=None):
         self.client = connector.Connector(opts)
         self.pigeon = pigeon
+        self.boolean = Boolean_Helper()
 
     def GetHost(self,pagedData):
         host_list = []
