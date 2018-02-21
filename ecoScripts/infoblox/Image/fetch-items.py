@@ -73,7 +73,7 @@ def get_extensible_attributes():
 def main():
     PIGEON.note.update({
         'status_code': 100,
-        'message' : 'Starting tasks for infoblox inventory filters',
+        'message' : 'Starting tasks for fetch items',
         'data' : {}
     })
     PIGEON.send()
@@ -86,7 +86,7 @@ def main():
 
     PIGEON.note.update({
         'status_code': 200,
-        'message' : 'All tasks completed for infoblox inventory filters',
+        'message' : 'All tasks completed for fetch items',
         'data' : fetch_result
     })
     PIGEON.send()

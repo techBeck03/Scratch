@@ -173,7 +173,7 @@
                             "name": "scope_list",
                             "label": "Tetration App Scopes",
                             "type": "fetch-single",
-                            "fetch_target": "APP_SCOPE",
+                            "fetch_target": "APP_SCOPES",
                             "environment_variable_name": "APP_SCOPE_ID",
                             "value": "",
                             "placeholder": "App Scope ID",
