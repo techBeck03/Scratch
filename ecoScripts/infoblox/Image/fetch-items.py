@@ -78,10 +78,11 @@ def main():
     })
     PIGEON.send()
 
-    fetch_result = {
-        'APP_SCOPES': get_app_scopes(),
-        'EXT_ATTRS': get_extensible_attributes()
-    }[TARGET_ITEM]
+    options = {
+        'APP_SCOPES': get_app_scopes,
+        'EXT_ATTRS': get_extensible_attributes
+    }
+    fetch_result = options[TARGET_ITEM]()
 
     PIGEON.note.update({
         'status_code': 200,
