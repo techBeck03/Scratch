@@ -1,9 +1,9 @@
 {
-    "version": "0.1",
+    "version": "0.06",
     "type": "api",
     "configurable": true,
     "schedulable": true,
-    "docker_image": "ecohub/infoblox:latest",
+    "docker_image": "ecohub/infoblox:v0.06",
     "config_parameters": [
         {
             "name": "connection_parameters",
