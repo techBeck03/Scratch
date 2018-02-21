@@ -101,16 +101,23 @@ def create_network_filters():
             print "no comment in network"
             print net[0]["network"]
             UNKNOWN_SUBNETS.append(net[0]["network"])
-
-    tetration.CreateInventoryFilters(iblox_subnets)
-    PIGEON.note.update({
-        'status_code': 100,
-        'message' : 'Pushing inventory filters to tetration',
-        'data' : {}
-    })
-    PIGEON.send()
-    tetration.PushInventoryFilters()
-    tetration.AddSubnets(tet_subnets)
+    if len(iblox_subnets) > 0:
+        tetration.CreateInventoryFilters(iblox_subnets)
+        PIGEON.note.update({
+            'status_code': 100,
+            'message' : 'Pushing inventory filters to tetration',
+            'data' : {}
+        })
+        PIGEON.send()
+        tetration.PushInventoryFilters()
+        tetration.AddSubnets(tet_subnets)
+    else:
+        PIGEON.note.update({
+            'status_code': 100,
+            'message' : 'No new subnets were found',
+            'data' : {}
+        })
+        PIGEON.send()
     
 def main():
     PIGEON.note.update({
