@@ -131,7 +131,7 @@
                     "type": "switch",
                     "environment_variable_name": "ENABLE_EA",
                     "value": false,
-                    "popover": "VM Networks (PortGroup-1,PortGroup-2)",
+                    "popover": "Extensible Attributes",
                     "order": 4,
                     "verify": true,
                     "children": [
