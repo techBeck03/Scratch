@@ -37,7 +37,7 @@ INFOBLOX_OPTS = {
     'wapi_version': '2.2',
     'max_results': QUERY_LIMIT,            # change from default
     'log_api_calls_as_info': False,
-    'paging': False
+    'paging': True
 }
 
 # Annotation Options

@@ -11,7 +11,7 @@ import csv
 # ====================================================================================
 # GLOBALS
 # ------------------------------------------------------------------------------------
-QUERY_LIMIT = 10
+QUERY_LIMIT = 200
 # Read in environment variables
 TARGET_ITEM = os.getenv('FETCH_TARGET')
 
@@ -34,10 +34,10 @@ INFOBLOX_OPTS = {
     'http_pool_connections': 10,
     'http_pool_maxsize': 10,
     'max_retries': 2,            # change from default
-    'wapi_version': '2.5',
+    'wapi_version': '2.2',
     'max_results': QUERY_LIMIT,            # change from default
     'log_api_calls_as_info': False,
-    'paging': False
+    'paging': True
 }
 
 # Pigeon Messenger
@@ -59,7 +59,7 @@ def get_app_scopes():
             'label': scope["name"],
             'value': scope["id"]
         })
-    return result_array
+    return sorted(result_array, key=lambda k: k['label'])
 
 def get_extensible_attributes():
     result_array = []
@@ -68,7 +68,7 @@ def get_extensible_attributes():
             'label': attribute["name"],
             'value': attribute["name"]
         })
-    return result_array
+    return sorted(result_array, key=lambda k: k['label'])
 
 def main():
     PIGEON.note.update({
