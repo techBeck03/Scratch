@@ -131,7 +131,7 @@
                     "type": "switch",
                     "environment_variable_name": "ENABLE_EA",
                     "value": false,
-                    "popover": "Extensible Attributes",
+                    "popover": "Annotate Extensible Attributes",
                     "order": 4,
                     "verify": true,
                     "children": [
