@@ -19,7 +19,7 @@ The first time the deployment executes, it retrieves all of the desired informat
 
 Each subsequent time the deployment executes, it still retrieves information about every virtual machine in the specified Datacenter, but it only pushes *changes* to Tetration.
 
-To force the deployment to push a complete copy of annotations to Tetration again, click the `"Clear Cache"` button in the configuration screen for the deployment.
+To force the deployment to push a complete copy of annotations to Tetration again, click the `Clear Cache` button in the configuration screen for the deployment.
 
 ### Configuration
 
@@ -42,6 +42,12 @@ This section desribes how to configure a **deployment** of the vCenter Annotatio
 
 ### Multiple Datacenters
 
-some text goes here
+Each deployment of the vCenter integration will only interact with one Datacenter in one vCenter endpoint. If information from multiple Datacenters is desired, the ecohub administrator can create multiple **deployments** from the same vCenter Annotations **image**. 
+
+From the `IMAGES` tab in the ecohub dashboard, locate the vCenter Annotations installed image and click the `Deploy` icon. Repeat this process for each additional Datacenter required. Each deployment can be configured to pull information from a different Datacenter.
 
 ### Renaming attributes
+
+Each parameter in the configuration screen that can be enabled/disabled can also be renamed. For example, the user might want to push `VM Name` to Tetration but search for it using a different parameter name (like `vm_name` or `machine name`) in the Tetration user interface.
+
+It is recommended to maintain consistent names (labels) for annotations in Tetration as Tetration considers `VM Name` and `VM_Name` to be completely different and unrelated fields.
