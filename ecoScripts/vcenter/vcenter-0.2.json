@@ -17,7 +17,7 @@
                     "type": "icon",
                     "icon": {
                         "group": "action",
-                        "name": "settings backup restore"
+                        "name": "settings_backup_restore"
                     }
                 },
                 {
