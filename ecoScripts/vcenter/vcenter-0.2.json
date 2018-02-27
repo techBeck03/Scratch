@@ -1,9 +1,9 @@
 {
-    "version": "0.1",
+    "version": "0.2",
     "type": "api",
     "configurable": true,
     "schedulable": true,
-    "docker_image": "ecohub/vcenter:latest",
+    "docker_image": "ecohub/vcenter:v0.2",
     "config_parameters": [
         {
             "name": "connection_parameters",
