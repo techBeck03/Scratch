@@ -65,7 +65,8 @@
                 {
                     "name": "vc_datacenter",
                     "label": "VC Datacenter",
-                    "type": "text",
+                    "type": "fetch-single",
+                    "fetch_target": "DATACENTERS",
                     "environment_variable_name": "VCENTER_DATACENTER",
                     "required": true,
                     "placeholder": "vCenter Datacenter",
