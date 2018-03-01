@@ -1,0 +1,17 @@
+node_modules
+npm-debug.log
+Dockerfile*
+docker-compose*
+.dockerignore
+.git
+.gitignore
+*.md
+LICENSE
+.vscode
+*.json
+*.csv
+Get-DockerCommand.ps1
+Get-VMotion.ps1
+Get-InventoryChanges_old.ps1
+download*.py
+date.txt
