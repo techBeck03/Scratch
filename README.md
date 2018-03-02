@@ -87,7 +87,7 @@ At this time, there are no CUSTOM actions defined in any ecohub integrations. Do
 {
     "status_code": 404,
     "message": "Requested action CUSTOM not implemented",
-    "data": {
+    "data": 
         [
             {
                 "label": "First label",
@@ -99,7 +99,6 @@ At this time, there are no CUSTOM actions defined in any ecohub integrations. Do
             }
 
         ]
-    }
 }
 ```
 
