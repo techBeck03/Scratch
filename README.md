@@ -27,7 +27,7 @@ The integer status code provided in the pigeon has the following meaning:
 - 200 = SUCCESS
 - 4xx = ERROR
 
-Any pigeon with a status_code of 100 will be displayed in the ecohub log as `INFO` along with its associated message. ecohub will not simply log/display these messages and take no action on its contents. The `data` field is ignored for `INFO` messages.
+Any pigeon with a status_code of 100 will be displayed in the ecohub log as `INFO` along with its associated message. ecohub will simply log/display these messages and take no action on its contents. The `data` field is ignored for `INFO` messages.
 
 Any pigeon with a status_code of 200 will be considered a *success* and mark the *completion* of the task given to the container. The status and message will be logged. In *some* cases, the `data` portion of the pigeon will also be examined or saved. Consult the actions below for more details.
 
@@ -57,7 +57,7 @@ Each image author is free to implement the Docker entrypoint differently as long
 
 ### Action: TEST_CONNECTIVITY
 
-The ecohub portal handles testing connectivity to your configured *target* (i.e. Tetration). This particular action should validate connectivity to the specific integration endpoint (i.e. vCenter Infoblox, Splunk, etc.).
+The ecohub portal handles testing connectivity to your configured *target* (i.e. Tetration) so individual Docker images don't have to do that. The TEST_CONNECTIVITY  action should validate connectivity to the *specific* integration endpoint (i.e. vCenter Infoblox, Splunk, etc.).
 
 This action should validate that the supplied username and password (or API key) are valid, and if possible, that those credentials have the role or access level required to execute the task that the image was designed to execute.
 
@@ -67,6 +67,18 @@ This action does what the Docker image was really designed to do. It tells the c
 
 ### Action: FETCH_ITEMS
 
+The FETCH_ITEMS action is used by ecohub to populate certain fields in the user interface to prevent the user from making typos. For example, the vCenter integration will fetch a list of VMware Datacenter names from vCenter so the user can select from a dropdown list instead of having to type the exact Datacenter name. 
+
+When ecohub runs a container with the FETCH_ITEMS `ACTION` environment variable, it will also specify a `FETCH_TARGET` environment variable so the container knows what data to return. More detail is provided in the JSON sections below, but this **ACTION** *does* use the data field of the pigeon message.
+
+```json
+{
+    "status_code": 200,
+    "message": "Data fetched successfully.",
+    "data": {}
+}
+```
+
 ### Action: CUSTOM
 
 At this time, there are no CUSTOM actions defined in any ecohub integrations. Docker images that do not implement the CUSTOM action should return a pigeon like:
@@ -75,7 +87,19 @@ At this time, there are no CUSTOM actions defined in any ecohub integrations. Do
 {
     "status_code": 404,
     "message": "Requested action CUSTOM not implemented",
-    "data": {}
+    "data": {
+        [
+            {
+                "label": "First label",
+                "value": "First value"
+            },
+            {
+                "label": "Second label",
+                "value": "Second value"
+            }
+
+        ]
+    }
 }
 ```
 
@@ -94,3 +118,13 @@ If the container does not recognize the **ACTION** environment variable, it shou
 ## Docker
 
 Most images for ecohub use `centos:centos7.4.1708` as their base image. Try to follow suit.
+
+Will add more detail here as time permits.
+
+## Manifest.json
+
+Will add more detail here as time permits.
+
+## Your integration JSON file
+
+Will add more detail here as time permits.
