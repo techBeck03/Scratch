@@ -1,6 +1,6 @@
 # Designing for ecohub
 
-Building a Docker image for use with ecohub requires adherence to a few simple guidelines that will be described in this document.
+Building a Docker image for use with ecohub requires adherence to a few simple guidelines that will be described in this document. In return, your users get access to a rich user interface where data entry, log parsing, and scheduling work is simplified.
 
 Every ecohub container receives its parameters as environment variables. These parameters include things like username, password, API keys, and which action the container should take. Review the `EnvironmentVariables.md` document in this repository for tips on using environment variables during testing.
 
@@ -8,7 +8,7 @@ Review the `Docker.md` document in this repository for more details on how to de
 
 ## Feedback via Pigeon
 
-The message format defined is called a **pigeon**. It provides a status code (integer), a message (string), and a dictionary/hash of data (if needed). Most pigeons only require a status code and message.
+Messages are sent from the container to the ecohub portal simply by printing to `stdout`. ecohub ignores any output sent to the screen other than **pigeon** messages. A **pigeon** is just a JSON structure that mimics an HTTP response sent to `stdout`. It provides a status code (integer), a message (string), and a dictionary/hash of data (if needed). Most pigeons only require a status code and message.
 
 ```json
 {
@@ -116,9 +116,11 @@ If the container does not recognize the **ACTION** environment variable, it shou
 
 ## Docker
 
-Most images for ecohub use `centos:centos7.4.1708` as their base image. Try to follow suit.
+Most images for ecohub use `centos:centos7.4.1708` as their base image. Try to follow suit in order to make downloads faster and save ecohub disk space.
 
-Will add more detail here as time permits.
+Docker images should be posted to `https://hub.docker.com/u/ecohub/` when possible, but the ecohub manifest (described below) allows other locations to be specified.
+
+Docker images can be downloaded and run independently of the ecohub portal, so the environment variables or config files used by the container should be well documented on Docker Hub. In most cases, it's much easier for the end user to employ your container through ecohub than by manually downloading the image.
 
 ## Manifest.json
 
