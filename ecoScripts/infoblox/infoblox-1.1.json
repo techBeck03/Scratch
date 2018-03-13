@@ -1,5 +1,5 @@
 {
-    "version": "1.0",
+    "version": "1.1",
     "type": "api",
     "configurable": true,
     "schedulable": true,
@@ -64,7 +64,7 @@
                     "label": "App Scope Name",
                     "type": "fetch-single",
                     "environment_variable_name": "ANNOTATION_APP_SCOPE_NAME",
-                    "value": "Default",
+                    "value": "[Default]",
                     "placeholder": "App Scope Name",
                     "order": 3,
                     "verify": true
