@@ -60,12 +60,15 @@
             "order": 2,
             "items": [
                 {
-                    "name": "app_scope_name",
-                    "label": "App Scope Name",
+                    "name": "tenant_scope_name",
+                    "label": "Tenant Scope Name",
                     "type": "fetch-single",
-                    "environment_variable_name": "ANNOTATION_APP_SCOPE_NAME",
+                    "fetch_target": "TENANT_SCOPE_NAMES",
+                    "environment_variable_name": "ANNOTATION_TENANT_SCOPE_NAME",
                     "value": "Default",
-                    "placeholder": "App Scope Name",
+                    "placeholder": "Tenant Scope Name",
+                    "popover": "Select a Tenant Scope Name",
+                    "required": true,
                     "order": 3,
                     "verify": true
                 },
@@ -212,9 +215,11 @@
                     "name": "ownership_scope",
                     "label": "Ownership Scope",
                     "type": "fetch-single",
+                    "fetch_target": "APP_SCOPE_IDS",
                     "environment_variable_name": "FILTERS_APP_SCOPE_ID",
                     "value": false,
                     "placeholder": "App Scope ID",
+                    "popover": "Select an App Scope",
                     "order": 3,
                     "verify": true
                 }
