@@ -69,7 +69,7 @@ COLUMNS = {
         "annotationName": os.environ['EA_ANNOTATION_NAME'],
         "infobloxName": "extattrs",
         "overload": "on",
-        "attrList" : (os.getenv('EA_LIST')).split(',')
+        "attrList" : json.loads(os.getenv('EA_LIST'))
     }
 }
 
@@ -115,7 +115,7 @@ def main():
         if len(columns) > 0:
             PIGEON.note.update({
                 'status_code': 100,
-                'message' : 'Retrieving next ' + str(QUERY_LIMIT) + 'undocumented hosts from tetration inventory',
+                'message' : 'Retrieving next ' + str(QUERY_LIMIT) + ' undocumented hosts from tetration inventory',
                 'data' : {}
             })
             PIGEON.send()

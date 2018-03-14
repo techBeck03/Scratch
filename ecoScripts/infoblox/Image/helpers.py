@@ -174,15 +174,15 @@ class Tetration_Helper(object):
                     if column["infobloxName"] == 'extattrs':
                         for attr in column["attrList"]:
                             if column["overload"] == "on":
-                                if attr in host["extattrs"]:
-                                    hostDict[column["annotationName"]] = str(attr) + '=' + str(host["extattrs"][attr]["value"]) + ';' if column["annotationName"] not in hostDict.keys() else hostDict[column["annotationName"]] + str(attr) + '=' + str(host["extattrs"][attr]["value"]) + ';'
+                                if attr["value"] in host["extattrs"]:
+                                    hostDict[column["annotationName"]] = str(attr["value"]) + '=' + str(host["extattrs"][attr["value"]]["value"]) + ';' if column["annotationName"] not in hostDict.keys() else hostDict[column["annotationName"]] + str(attr["value"]) + '=' + str(host["extattrs"][attr["value"]]["value"]) + ';'
                                 else:
-                                    hostDict[column["annotationName"]] = str(attr) + '=;' if column["annotationName"] not in hostDict.keys() else str(hostDict[column["annotationName"]]) + str(attr) + '=;'
+                                    hostDict[column["annotationName"]] = str(attr["value"]) + '=;' if column["annotationName"] not in hostDict.keys() else str(hostDict[column["annotationName"]]) + str(attr["value"]) + '=;'
                             else:
-                                if attr in host["extattrs"]:
-                                    hostDict[column["annotationName"] + '-' + attr] = host["extattrs"][attr]["value"]
+                                if attr["value"] in host["extattrs"]:
+                                    hostDict[column["annotationName"] + '-' + attr["value"]] = host["extattrs"][attr["value"]]["value"]
                                 else:
-                                    hostDict[column["annotationName"] + '-' + attr] = ''
+                                    hostDict[column["annotationName"] + '-' + attr["value"]] = ''
                     elif column["infobloxName"] == 'zone':
                         hostDict[column["annotationName"]] = '.'.join(",".join(host["names"]).split('.')[1:])
                     elif column["infobloxName"] == 'names':
