@@ -87,7 +87,7 @@
                             "label": "Tetration Annotation Name",
                             "type": "text",
                             "environment_variable_name": "HOSTNAME_ANNOTATION_NAME",
-                            "value" : "Iblox Hostname",
+                            "value" : "Infoblox Hostname",
                             "placeholder": "Tetration Annotation Name",
                             "order": 1,
                             "verify": false
@@ -95,21 +95,21 @@
                     ]
                 },
                 {
-                    "name": "network_view",
-                    "label": "Network View",
+                    "name": "zone",
+                    "label": "DNS Zone",
                     "type": "switch",
-                    "environment_variable_name": "ENABLE_NETWORK_VIEW",
+                    "environment_variable_name": "ENABLE_ZONE",
                     "value": false,
-                    "popover": "Annotate network view",
+                    "popover": "Annotate dns zone",
                     "order": 2,
                     "verify": false,
                     "children": [
                         {
-                            "name": "network_view_annotation_name",
+                            "name": "zone_annotation_name",
                             "label": "Tetration Annotation Name",
                             "type": "text",
-                            "environment_variable_name": "NETWORK_VIEW_ANNOTATION_NAME",
-                            "value": "Iblox View",
+                            "environment_variable_name": "ZONE_ANNOTATION_NAME",
+                            "value": "Infoblox Zone",
                             "placeholder": "Tetration Annotation Name",
                             "order": 1,
                             "verify": false
@@ -131,7 +131,29 @@
                             "label": "Tetration Annotation Name",
                             "type": "text",
                             "environment_variable_name": "SUBNET_ANNOTATION_NAME",
-                            "value": "Iblox Subnet",
+                            "value": "Infoblox Subnet",
+                            "placeholder": "Tetration Annotation Name",
+                            "order": 1,
+                            "verify": false
+                        }
+                    ]
+                },
+                {
+                    "name": "network_view",
+                    "label": "Network View",
+                    "type": "switch",
+                    "environment_variable_name": "ENABLE_NETWORK_VIEW",
+                    "value": false,
+                    "popover": "Annotate network view",
+                    "order": 2,
+                    "verify": false,
+                    "children": [
+                        {
+                            "name": "network_view_annotation_name",
+                            "label": "Tetration Annotation Name",
+                            "type": "text",
+                            "environment_variable_name": "NETWORK_VIEW_ANNOTATION_NAME",
+                            "value": "Infoblox View",
                             "placeholder": "Tetration Annotation Name",
                             "order": 1,
                             "verify": false
@@ -153,7 +175,7 @@
                             "label": "Tetration Annotation Name",
                             "type": "text",
                             "environment_variable_name": "EA_ANNOTATION_NAME",
-                            "value": "Iblox EA",
+                            "value": "Infoblox EAs",
                             "placeholder": "Tetration Annotation Name",
                             "order": 1,
                             "verify": false
@@ -181,7 +203,7 @@
             "controls": [
                 {
                     "label": "Update Filters",
-                    "action": "update_filters",
+                    "action": "create_filters",
                     "message": "Update Filters",
                     "type": "icon",
                     "icon": {
@@ -191,16 +213,6 @@
                 }
             ],
             "items": [
-                {
-                    "name": "auto-update",
-                    "label": "Auto Update",
-                    "type": "switch",
-                    "environment_variable_name": "AUTO_UPDATE",
-                    "value": false,
-                    "popover": "Update Filters on scheduled runs",
-                    "order": 1,
-                    "verify": true
-                },
                 {
                     "name": "scope_restricted",
                     "label": "Restricted?",
