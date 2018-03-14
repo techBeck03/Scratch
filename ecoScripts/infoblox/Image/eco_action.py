@@ -12,6 +12,10 @@ import helpers
 # Define pigeon messenger
 PIGEON = helpers.Pigeon()
 
+def run_integration():
+    subprocess.call(["python", "annotate-host.py"])
+    if os.environ['AUTO_UPDATE'] is True:
+        subprocess.call(["python", "create-inventory-filters.py"])
 
 if os.getenv('ACTION'):
     PIGEON.note.update({
@@ -22,7 +26,7 @@ if os.getenv('ACTION'):
     PIGEON.send()
     options = {
         'TEST_CONNECTIVITY': lambda : subprocess.call(["python", "test_connectivity.py"]),
-        'RUN_INTEGRATION': lambda : subprocess.call(["python", "annotate-host.py"]),
+        'RUN_INTEGRATION': run_integration,
         'CREATE_FILTERS': lambda : subprocess.call(["python", "create-inventory-filters.py"]),
         'FETCH_ITEMS': lambda: subprocess.call(["python", "fetch-items.py"])
     }

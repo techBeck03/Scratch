@@ -31,7 +31,7 @@ class Tetration_Helper(object):
         pagedData = None
         hasNext = False
 
-    def __init__(self, endpoint, api_key, api_secret,pigeon, options):
+    def __init__(self, endpoint, api_key, api_secret,pigeon, options, tenant_app_scope="Default"):
         self.rc = RestClient(endpoint, api_key=api_key, api_secret=api_secret, verify=False)
         self.scopes = []
         self.pigeon = pigeon
@@ -40,6 +40,7 @@ class Tetration_Helper(object):
         self.options = options
         self.subnets = []
         self.boolean = Boolean_Helper()
+        self.tenant_app_scope = tenant_app_scope
 
     def GetSearchDimensions(self):
         resp = self.rc.get('/inventory/search/dimensions')
@@ -81,6 +82,7 @@ class Tetration_Helper(object):
                 "type": "or",
                 "filters": filters
             },
+            "scopeName": self.tenant_app_scope,
             "dimensions": dimensions,
             "limit": self.options["limit"],
             "offset": self.inventory.offset if self.inventory else ""
@@ -109,7 +111,7 @@ class Tetration_Helper(object):
 
     def CreateInventoryFilters(self,network_list):
         inventoryDict = {}
-        appScopeId = os.getenv('APP_SCOPE_ID',default='Default')
+        appScopeId = os.getenv('FILTERS_APP_SCOPE_ID',default='Default')
         for row in network_list:
             if row['comment'] not in inventoryDict:
                 inventoryDict[row['comment']] = {}
@@ -186,9 +188,11 @@ class Tetration_Helper(object):
                     else:
                         hostDict[column["annotationName"]] = host[column["infobloxName"]]
                 writer.writerow(hostDict)
-        keys = ['IP', 'VRF']
-        req_payload = [tetpyclient.MultiPartOption(key='X-Tetration-Key', val=keys), tetpyclient.MultiPartOption(key='X-Tetration-Oper', val='add')]
-        resp = self.rc.upload(csvFile, '/assets/cmdb/upload', req_payload)
+        #keys = ['IP', 'VRF']
+        #req_payload = [tetpyclient.MultiPartOption(key='X-Tetration-Key', val=keys), tetpyclient.MultiPartOption(key='X-Tetration-Oper', val='add')]
+        #resp = self.rc.upload(csvFile, '/assets/cmdb/upload', req_payload)
+        req_payload = [tetpyclient.MultiPartOption(key='X-Tetration-Oper', val='add')]
+        self.rc.upload(csvFile, '/assets/cmdb/upload/' + self.tenant_app_scope, req_payload)
         if resp.status_code != 200:
             self.pigeon.note.update({
                 'status_code': 403,
