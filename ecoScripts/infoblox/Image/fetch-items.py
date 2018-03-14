@@ -51,7 +51,7 @@ tetration = Tetration_Helper(TETRATION_ENDPOINT, TETRATION_API_KEY, TETRATION_AP
 def PrettyPrint(target):
     print json.dumps(target,sort_keys=True,indent=4)
 
-def get_app_scopes():
+def get_app_scope_ids():
     result_array = []
     tetration.GetApplicationScopes()
     for scope in tetration.scopes:
@@ -59,6 +59,17 @@ def get_app_scopes():
             'label': scope["name"],
             'value': scope["id"]
         })
+    return sorted(result_array, key=lambda k: k['label'])
+
+def get_tenant_scope_names():
+    result_array = []
+    tenants = tetration.GetTenantNames()
+    for tenant in tenants:
+        if tenant["name"] not in ['Default', 'Unknown', 'Tetration']:
+            result_array.append({
+                'label': tenant["name"],
+                'value': tenant["name"]
+            })
     return sorted(result_array, key=lambda k: k['label'])
 
 def get_extensible_attributes():
@@ -79,7 +90,8 @@ def main():
     PIGEON.send()
 
     options = {
-        'APP_SCOPES': get_app_scopes,
+        'APP_SCOPE_IDS': get_app_scope_ids,
+        'TENANT_SCOPE_NAMES': get_tenant_scope_names,
         'EXT_ATTRS': get_extensible_attributes
     }
     fetch_result = options[TARGET_ITEM]()

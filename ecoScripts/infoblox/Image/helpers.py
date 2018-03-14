@@ -60,6 +60,21 @@ class Tetration_Helper(object):
         else:
             self.scopes = resp.json()
 
+    def GetTenantNames(self):
+        resp = self.rc.get('/vrfs')
+        if resp.status_code != 200:
+            self.pigeon.status_code = '403'
+            self.pigeon.note.update({
+                'status_code': 403,
+                'message' : 'Unable to get application scopes from tetration cluster',
+                'data' : {}
+            })
+            self.pigeon.send()
+            exit(0)
+
+        else:
+            return resp.json()
+
     def GetInventory(self, filters=None, dimensions=None):
         req_payload = {
             "filter": {
