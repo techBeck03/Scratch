@@ -111,7 +111,7 @@ class Tetration_Helper(object):
 
     def CreateInventoryFilters(self,network_list):
         inventoryDict = {}
-        appScopeId = os.getenv('FILTERS_APP_SCOPE_ID',default='Default')
+        appScopeId = json.loads(os.environ['FILTERS_APP_SCOPE_ID'])[0]["value"]
         for row in network_list:
             if row['comment'] not in inventoryDict:
                 inventoryDict[row['comment']] = {}
@@ -152,7 +152,7 @@ class Tetration_Helper(object):
 
     def AnnotateHosts(self,hosts,columns,csvFile):
         with open(csvFile, "wb") as csv_file:
-            fieldnames = ['IP','VRF']
+            fieldnames = ['IP']
             for column in columns:
                 if column["infobloxName"] != 'extattrs':
                     fieldnames.extend([column["annotationName"]])
@@ -167,7 +167,9 @@ class Tetration_Helper(object):
             for host in hosts:
                 hostDict = {}
                 hostDict["IP"] = host["ip_address"]
-                hostDict["VRF"] = [ tetHost["vrf_name"] for tetHost in self.inventory.pagedData if tetHost["ip"] == host["ip_address"] ][0]
+                # hostDict["VRF"] = [ tetHost["vrf_name"] for tetHost in self.inventory.pagedData if tetHost["ip"] == host["ip_address"] ][0]
+                if len(host["names"]) < 1:
+                    continue
                 for column in columns:
                     if column["infobloxName"] == 'extattrs':
                         for attr in column["attrList"]:
@@ -192,7 +194,7 @@ class Tetration_Helper(object):
         #req_payload = [tetpyclient.MultiPartOption(key='X-Tetration-Key', val=keys), tetpyclient.MultiPartOption(key='X-Tetration-Oper', val='add')]
         #resp = self.rc.upload(csvFile, '/assets/cmdb/upload', req_payload)
         req_payload = [tetpyclient.MultiPartOption(key='X-Tetration-Oper', val='add')]
-        self.rc.upload(csvFile, '/assets/cmdb/upload/' + self.tenant_app_scope, req_payload)
+        resp = self.rc.upload(csvFile, '/assets/cmdb/upload/' + self.tenant_app_scope, req_payload)
         if resp.status_code != 200:
             self.pigeon.note.update({
                 'status_code': 403,

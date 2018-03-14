@@ -215,7 +215,7 @@
             "items": [
                 {
                     "name": "scope_restricted",
-                    "label": "Restricted?",
+                    "label": "Scope Restricted",
                     "type": "switch",
                     "environment_variable_name": "SCOPE_RESTRICTED",
                     "value": false,

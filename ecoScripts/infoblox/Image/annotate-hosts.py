@@ -79,6 +79,8 @@ PIGEON = Pigeon()
 infoblox = Infoblox_Helper(opts=INFOBLOX_OPTS,pigeon=PIGEON)
 # Connect to tetration   
 tetration = Tetration_Helper(TETRATION_ENDPOINT, api_key=TETRATION_API_KEY, api_secret=TETRATION_API_SECRET,pigeon=PIGEON, options=TETRATION_OPTS, tenant_app_scope=TETRATION_TENANT_SCOPE_NAME)
+# Boolean helper
+BOOLEAN = Boolean_Helper()
 
 # Debug function used for printing formatted dictionaries
 def PrettyPrint(target):
@@ -108,12 +110,12 @@ def main():
         'data' : {}
     })
     PIGEON.send()
-    columns = [COLUMNS[column] for column in COLUMNS if COLUMNS[column]["enabled"] == "on" ]
+    columns = [COLUMNS[column] for column in COLUMNS if BOOLEAN.GetBoolean(COLUMNS[column]["enabled"]) ]
     while True:
         if len(columns) > 0:
             PIGEON.note.update({
                 'status_code': 100,
-                'message' : 'Retrieving next ' + QUERY_LIMIT + 'undocumented hosts from tetration inventory',
+                'message' : 'Retrieving next ' + str(QUERY_LIMIT) + 'undocumented hosts from tetration inventory',
                 'data' : {}
             })
             PIGEON.send()
@@ -142,6 +144,7 @@ def main():
                 'data' : {}
             })
             PIGEON.send()
+            exit(0)
     PIGEON.note.update({
         'status_code': 200,
         'message' : 'All tasks completed for infoblox host annotations',
