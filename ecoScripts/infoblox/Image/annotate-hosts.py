@@ -68,7 +68,7 @@ COLUMNS = {
         "enabled": os.environ['ENABLE_EA'],
         "annotationName": os.environ['EA_ANNOTATION_NAME'],
         "infobloxName": "extattrs",
-        "overload": os.environ['OVERLOAD_EA'],
+        "overload": "on",
         "attrList" : (os.getenv('EA_LIST')).split(',')
     }
 }
