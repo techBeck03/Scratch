@@ -62,7 +62,7 @@
                 {
                     "name": "tenant_scope_name",
                     "label": "Tenant Scope Name",
-                    "type": "fetch-single",
+                    "type": "fetch-object",
                     "fetch_target": "TENANT_SCOPE_NAMES",
                     "environment_variable_name": "ANNOTATION_TENANT_SCOPE_NAME",
                     "value": [{"label": "Default", "value": "Default"}],
@@ -183,7 +183,7 @@
                         {
                             "name": "ea_list",
                             "label": "Extensible Attributes",
-                            "type": "fetch-multiple",
+                            "type": "fetch-list",
                             "fetch_target": "EXT_ATTRS",
                             "environment_variable_name": "EA_LIST",
                             "value": "",
@@ -226,7 +226,7 @@
                 {
                     "name": "ownership_scope",
                     "label": "Ownership Scope",
-                    "type": "fetch-single",
+                    "type": "fetch-object",
                     "fetch_target": "APP_SCOPE_IDS",
                     "environment_variable_name": "FILTERS_APP_SCOPE_ID",
                     "value": "",
