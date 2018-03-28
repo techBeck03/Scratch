@@ -8,7 +8,7 @@ The files in this repository are intended to build a Docker image for use with t
 
 ## Supported Actions
 
-This bundle of scripts is programmed to respond to **three** *actions* specified by the ecohub portal.
+This bundle of scripts is programmed to respond to **four** *actions* specified by the ecohub portal.
 
 ### TEST_CONNECTIVITY
 `TEST_CONNECTIVITY` will verify the username, password and URL of the specified vCenter endpoint. It will also verify that the specified vCenter Datacenter exists. It returns pigeon messages with details of any connectivity errors or a success pigeon.
