@@ -148,4 +148,33 @@ Your integration will pull information from one source and then push it to one o
 
 ## Your integration JSON file
 
+Every integration requires its own JSON manifest file that describes the image details and the ecohub HTML form details. Here is a summary of the JSON format:
+
+```json
+{
+    "version": "0.2",
+    "type": "api",
+    "configurable": true,
+    "schedulable": true,
+    "docker_image": "ecohub/vcenter:v0.2",
+    "config_parameters": [ ... ]
+}
+```
+
+### Image details
+
+The top portion of the JSON structure describe an image.
+
+`version` describes the version number of the integration. This is displayed in a few places within the ecohub web portal, so make sure it is accurate.
+
+`type` is always set to `api` at this time.
+
+`configurable` is a boolean (true/false) that indicates whether or not the integration has parameters that can be specified by the end user. There are no integrations at this time that should use a value other than `true` for this parameter.
+
+`schedulable` is a boolean (true/false) that indicates whether or not a user should be allowed to run this integration on a schedule. Not all integrations should be schedulable. For example, an integration that simply does a file conversion should be run interactively and not on a schedule.
+
+`docker_image` points to the location on Docker Hub where the Docker image can be found.
+
+### Configuration parameters
+
 Will add more detail here as time permits.
