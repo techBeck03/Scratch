@@ -31,7 +31,7 @@ class Tetration_Helper(object):
         pagedData = None
         hasNext = False
 
-    def __init__(self, endpoint, api_key, api_secret,pigeon, options):
+    def __init__(self, endpoint, api_key, api_secret,pigeon, options, tenant_app_scope="Default"):
         self.rc = RestClient(endpoint, api_key=api_key, api_secret=api_secret, verify=False)
         self.scopes = []
         self.pigeon = pigeon
@@ -40,6 +40,7 @@ class Tetration_Helper(object):
         self.options = options
         self.subnets = []
         self.boolean = Boolean_Helper()
+        self.tenant_app_scope = tenant_app_scope
 
     def GetSearchDimensions(self):
         resp = self.rc.get('/inventory/search/dimensions')
@@ -60,12 +61,28 @@ class Tetration_Helper(object):
         else:
             self.scopes = resp.json()
 
+    def GetTenantNames(self):
+        resp = self.rc.get('/vrfs')
+        if resp.status_code != 200:
+            self.pigeon.status_code = '403'
+            self.pigeon.note.update({
+                'status_code': 403,
+                'message' : 'Unable to get application scopes from tetration cluster',
+                'data' : {}
+            })
+            self.pigeon.send()
+            exit(0)
+
+        else:
+            return resp.json()
+
     def GetInventory(self, filters=None, dimensions=None):
         req_payload = {
             "filter": {
                 "type": "or",
                 "filters": filters
             },
+            "scopeName": self.tenant_app_scope,
             "dimensions": dimensions,
             "limit": self.options["limit"],
             "offset": self.inventory.offset if self.inventory else ""
@@ -94,7 +111,7 @@ class Tetration_Helper(object):
 
     def CreateInventoryFilters(self,network_list):
         inventoryDict = {}
-        appScopeId = os.getenv('APP_SCOPE_ID',default='Default')
+        appScopeId = json.loads(os.environ['FILTERS_APP_SCOPE_ID'])[0]["value"]
         for row in network_list:
             if row['comment'] not in inventoryDict:
                 inventoryDict[row['comment']] = {}
@@ -135,7 +152,7 @@ class Tetration_Helper(object):
 
     def AnnotateHosts(self,hosts,columns,csvFile):
         with open(csvFile, "wb") as csv_file:
-            fieldnames = ['IP','VRF']
+            fieldnames = ['IP']
             for column in columns:
                 if column["infobloxName"] != 'extattrs':
                     fieldnames.extend([column["annotationName"]])
@@ -150,20 +167,22 @@ class Tetration_Helper(object):
             for host in hosts:
                 hostDict = {}
                 hostDict["IP"] = host["ip_address"]
-                hostDict["VRF"] = [ tetHost["vrf_name"] for tetHost in self.inventory.pagedData if tetHost["ip"] == host["ip_address"] ][0]
+                # hostDict["VRF"] = [ tetHost["vrf_name"] for tetHost in self.inventory.pagedData if tetHost["ip"] == host["ip_address"] ][0]
+                if len(host["names"]) < 1:
+                    continue
                 for column in columns:
                     if column["infobloxName"] == 'extattrs':
                         for attr in column["attrList"]:
                             if column["overload"] == "on":
-                                if attr in host["extattrs"]:
-                                    hostDict[column["annotationName"]] = str(attr) + '=' + str(host["extattrs"][attr]["value"]) + ';' if column["annotationName"] not in hostDict.keys() else hostDict[column["annotationName"]] + str(attr) + '=' + str(host["extattrs"][attr]["value"]) + ';'
+                                if attr["value"] in host["extattrs"]:
+                                    hostDict[column["annotationName"]] = str(attr["value"]) + '=' + str(host["extattrs"][attr["value"]]["value"]) + ';' if column["annotationName"] not in hostDict.keys() else hostDict[column["annotationName"]] + str(attr["value"]) + '=' + str(host["extattrs"][attr["value"]]["value"]) + ';'
                                 else:
-                                    hostDict[column["annotationName"]] = str(attr) + '=;' if column["annotationName"] not in hostDict.keys() else str(hostDict[column["annotationName"]]) + str(attr) + '=;'
+                                    hostDict[column["annotationName"]] = str(attr["value"]) + '=;' if column["annotationName"] not in hostDict.keys() else str(hostDict[column["annotationName"]]) + str(attr["value"]) + '=;'
                             else:
-                                if attr in host["extattrs"]:
-                                    hostDict[column["annotationName"] + '-' + attr] = host["extattrs"][attr]["value"]
+                                if attr["value"] in host["extattrs"]:
+                                    hostDict[column["annotationName"] + '-' + attr["value"]] = host["extattrs"][attr["value"]]["value"]
                                 else:
-                                    hostDict[column["annotationName"] + '-' + attr] = ''
+                                    hostDict[column["annotationName"] + '-' + attr["value"]] = ''
                     elif column["infobloxName"] == 'zone':
                         hostDict[column["annotationName"]] = '.'.join(",".join(host["names"]).split('.')[1:])
                     elif column["infobloxName"] == 'names':
@@ -171,9 +190,11 @@ class Tetration_Helper(object):
                     else:
                         hostDict[column["annotationName"]] = host[column["infobloxName"]]
                 writer.writerow(hostDict)
-        keys = ['IP', 'VRF']
-        req_payload = [tetpyclient.MultiPartOption(key='X-Tetration-Key', val=keys), tetpyclient.MultiPartOption(key='X-Tetration-Oper', val='add')]
-        resp = self.rc.upload(csvFile, '/assets/cmdb/upload', req_payload)
+        #keys = ['IP', 'VRF']
+        #req_payload = [tetpyclient.MultiPartOption(key='X-Tetration-Key', val=keys), tetpyclient.MultiPartOption(key='X-Tetration-Oper', val='add')]
+        #resp = self.rc.upload(csvFile, '/assets/cmdb/upload', req_payload)
+        req_payload = [tetpyclient.MultiPartOption(key='X-Tetration-Oper', val='add')]
+        resp = self.rc.upload(csvFile, '/assets/cmdb/upload/' + self.tenant_app_scope, req_payload)
         if resp.status_code != 200:
             self.pigeon.note.update({
                 'status_code': 403,

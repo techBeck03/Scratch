@@ -3,9 +3,9 @@
         "name": "vcenter",
         "label": "vCenter Annotations",
         "versions": [
-            0.2
+            "0.2"
         ],
-        "latest": 0.2,
+        "latest": "0.2",
         "path": "https://github.com/techBeck03/Scratch/raw/master/ecoScripts/vcenter",
         "icon": "icon.png",
         "tags": "vmware",
@@ -15,9 +15,9 @@
         "name": "infoblox",
         "label": "Infoblox Annotations",
         "versions": [
-            0.1
+            "0.1", "1.1"
         ],
-        "latest": 0.1,
+        "latest": "1.1",
         "path": "https://github.com/techBeck03/Scratch/raw/master/ecoScripts/infoblox",
         "icon": "icon.png",
         "tags": "ipam",
@@ -27,9 +27,9 @@
         "name": "algosec",
         "label": "Algosec Policy Augmentation",
         "versions": [
-            0.1
+            "0.1"
         ],
-        "latest": 0.1,
+        "latest": "0.1",
         "path": "https://github.com/techBeck03/Scratch/raw/master/ecoScripts/algosec",
         "icon": "icon.png",
         "tags": "security",
@@ -39,9 +39,9 @@
         "name": "tufin",
         "label": "Tufin Security Augmentation",
         "versions": [
-            0.1
+            "0.1"
         ],
-        "latest": 0.1,
+        "latest": "0.1",
         "path": "https://github.com/techBeck03/Scratch/raw/master/ecoScripts/tufin",
         "icon": "icon.png",
         "tags": "security",
@@ -51,9 +51,9 @@
         "name": "servicenow",
         "label": "ServiceNow CMDB",
         "versions": [
-            0.1
+            "0.1"
         ],
-        "latest": 0.1,
+        "latest": "0.1",
         "path": "https://github.com/techBeck03/Scratch/raw/master/ecoScripts/servicenow",
         "icon": "icon.png",
         "tags": "cmdb",
@@ -63,9 +63,9 @@
         "name": "splunk",
         "label": "Splunk Monitoring",
         "versions": [
-            0.1
+            "0.1"
         ],
-        "latest": 0.1,
+        "latest": "0.1",
         "path": "https://github.com/techBeck03/Scratch/raw/master/ecoScripts/splunk",
         "icon": "icon.png",
         "tags": "cmdb",

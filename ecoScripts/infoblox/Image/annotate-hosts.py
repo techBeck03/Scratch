@@ -22,6 +22,7 @@ TETRATION_API_SECRET = os.environ['TETRATION_API_SECRET']
 TETRATION_OPTS = {
     'limit': QUERY_LIMIT
 }
+TETRATION_TENANT_SCOPE_NAME = json.loads(os.environ['ANNOTATION_TENANT_SCOPE_NAME'])[0]["value"]
 
 # Infoblox
 INFOBLOX_OPTS = {
@@ -67,8 +68,8 @@ COLUMNS = {
         "enabled": os.environ['ENABLE_EA'],
         "annotationName": os.environ['EA_ANNOTATION_NAME'],
         "infobloxName": "extattrs",
-        "overload": os.environ['OVERLOAD_EA'],
-        "attrList" : (os.getenv('EA_LIST')).split(',')
+        "overload": "on",
+        "attrList" : json.loads(os.getenv('EA_LIST'))
     }
 }
 
@@ -77,7 +78,9 @@ PIGEON = Pigeon()
 # Connect to infoblox
 infoblox = Infoblox_Helper(opts=INFOBLOX_OPTS,pigeon=PIGEON)
 # Connect to tetration   
-tetration = Tetration_Helper(TETRATION_ENDPOINT, TETRATION_API_KEY, TETRATION_API_SECRET,PIGEON,TETRATION_OPTS)
+tetration = Tetration_Helper(TETRATION_ENDPOINT, api_key=TETRATION_API_KEY, api_secret=TETRATION_API_SECRET,pigeon=PIGEON, options=TETRATION_OPTS, tenant_app_scope=TETRATION_TENANT_SCOPE_NAME)
+# Boolean helper
+BOOLEAN = Boolean_Helper()
 
 # Debug function used for printing formatted dictionaries
 def PrettyPrint(target):
@@ -107,12 +110,12 @@ def main():
         'data' : {}
     })
     PIGEON.send()
-    columns = [COLUMNS[column] for column in COLUMNS if COLUMNS[column]["enabled"] == "on" ]
+    columns = [COLUMNS[column] for column in COLUMNS if BOOLEAN.GetBoolean(COLUMNS[column]["enabled"]) ]
     while True:
         if len(columns) > 0:
             PIGEON.note.update({
                 'status_code': 100,
-                'message' : 'Retrieving next ' + QUERY_LIMIT + 'undocumented hosts from tetration inventory',
+                'message' : 'Retrieving next ' + str(QUERY_LIMIT) + ' undocumented hosts from tetration inventory',
                 'data' : {}
             })
             PIGEON.send()
@@ -141,6 +144,7 @@ def main():
                 'data' : {}
             })
             PIGEON.send()
+            exit(0)
     PIGEON.note.update({
         'status_code': 200,
         'message' : 'All tasks completed for infoblox host annotations',
