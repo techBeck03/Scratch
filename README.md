@@ -124,7 +124,25 @@ Docker images can be downloaded and run independently of the ecohub portal, so t
 
 ## Manifest.json
 
-Will add more detail here as time permits.
+A *manifest* file defines a list of **all** of the integrations available to ecohub. It is a single JSON file stored on github. An ecohub architect will help you define this structure for your integration and add it to the main `manifest.json` file. Because this file contains information about **all** the integrations, that information is high-level. Greater detail exists in a JSON file in the subdirectory where the integration is stored. The structure for one integration looks like:
+
+```json
+{
+    "name": "vcenter",
+    "label": "vCenter Annotations",
+    "versions": [
+        0.2
+    ],
+    "latest": 0.2,
+    "path": "https://github.com/techBeck03/Scratch/raw/master/ecoScripts/vcenter",
+    "icon": "icon.png",
+    "tags": "vmware",
+    "required_targets": ["tetration"]
+},
+```
+The `label` field represents the friendly name for the *image*. It will be visible to the ecohub user.
+
+The `versions` field defines all available versions of the integration, but ecohub presently only uses the `latest` version.
 
 ## Your integration JSON file
 
