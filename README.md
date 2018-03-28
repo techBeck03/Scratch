@@ -144,6 +144,8 @@ The `label` field represents the friendly name for the *image*. It will be visib
 
 The `versions` field defines all available versions of the integration, but ecohub presently only uses the `latest` version.
 
+Your integration will pull information from one source and then push it to one or more *targets*. For example, your integration might pull rich data from an IPAM and push it to Tetration as annotations. ecohub architecture supports different *targets*, but only `tetration` is currently supported for `required_targets`.
+
 ## Your integration JSON file
 
 Will add more detail here as time permits.
