@@ -1,6 +1,7 @@
 """
-This script is set up to fetch data, but at this time it only responds to
-one fetch command: fetch datacenter names.
+This script is set up to fetch data from either vCenter (DATACENTERS) or
+Tetration (VRFS or SCOPES).
+
 It returns that list in the 'data' portion of an ecohub pigeon message.
 
 Author: Doron Chosnek, Cisco Systems, February 2018
@@ -45,6 +46,7 @@ def tet_get_vrfs(exclusions):
     return [x for x in resp.json() if x['name'] not in exclusions]
 
 def tet_get_scopes():
+    ''' Returns all scopes part of the Tenant VRF defined in env variables. '''
     restclient = tet_connect()
     vrf_list = tet_get_vrfs(exclusions=[])
     vrf_id = 1
@@ -67,7 +69,6 @@ pigeon = {
         "message": ""
     }
 
-# at this time, we only handle one fetch command
 if TARGET_ITEM == 'DATACENTERS':
 
     # required workaround documented at:
@@ -79,46 +80,34 @@ if TARGET_ITEM == 'DATACENTERS':
     content = vc.RetrieveContent()
     # A list comprehension of all the root folder's first tier children...
     dcenters = [entity for entity in content.rootFolder.childEntity if hasattr(entity, 'vmFolder')]
-
-    # if we found at least one datacenter, return it
-    if len(dcenters) > 0:
-        pigeon['status_code'] = 200
-        pigeon['message'] = "Found {} Datacenters.".format(len(dcenters))
-        pigeon['data'] = [{'label': dc.name, 'value': dc.name} for dc in dcenters]
-    else:
-        pigeon['status_code'] = 400
-        pigeon['message'] = 'Could not find any datacenters.'
+    fetched = [{'label': dc.name, 'value': dc.name} for dc in dcenters]
 
 elif TARGET_ITEM == 'VRFS':
 
     vrfs = tet_get_vrfs(exclusions=['Unknown', 'Tetration'])
-
-    if len(vrfs) > 0:
-        pigeon['status_code'] = 200
-        pigeon['message'] = "Found {} tenant VRFs.".format(len(vrfs))
-        pigeon['data'] = [{'name': x['name'], 'value': x['name']} for x in vrfs]
-    else:
-        pigeon['status_code'] = 400
-        pigeon['message'] = 'Could not find any tenant VRFs.'
+    fetched = [{'name': x['name'], 'value': x['name']} for x in vrfs]
 
 elif TARGET_ITEM == 'SCOPES':
 
     scopes = tet_get_scopes()
-    if len(scopes) > 0:
-        pigeon['status_code'] = 200
-        pigeon['message'] = "Found {} scopes.".format(len(scopes))
-        pigeon['data'] = [{'name': x, 'value': x} for x in scopes]
-    else:
-        pigeon['status_code'] = 400
-        pigeon['message'] = 'Could not find any scopes.'
+    fetched = [{'name': x, 'value': x} for x in scopes]
 
-
-# if this code is executing, ecohub asked us to fetch something we don't 
-# know how to fetch
 else:
-    pigeon['status_code'] = 400
-    pigeon['message'] = 'I did not recognize that fetch command.'
+    fetched = []
 
+# format the pigeon to return results to ecohub
+if len(fetched):
+    pigeon = {
+        "status_code": 200,
+        "data": fetched,
+        "message": "Fetching {} and found {} items.".format(TARGET_ITEM, len(fetched))
+    }
+else:
+    pigeon = {
+        "status_code": 400,
+        "data": [],
+        "message": "Unabled to fetch '{}'.".format(TARGET_ITEM)
+    }
 
 # send the pigeon... if DEBUG is enabled, then send it with indentation;
 # otherwise send it as minified JSON
