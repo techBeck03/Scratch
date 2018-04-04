@@ -3,7 +3,7 @@
     "type": "api",
     "configurable": true,
     "schedulable": true,
-    "docker_image": "ecohub/vcenter:v0.25",
+    "docker_image": "ecohub/vcenter:v0.3",
     "config_parameters": [
         {
             "name": "connection_parameters",
@@ -111,6 +111,7 @@
                     "environment_variable_name": "APPSCOPE_NAME",
                     "required": true,
                     "placeholder": "Application Scope Name",
+                    "value": [{"label": "Default", "value": "Default"}],
                     "order": 2,
                     "verify": true
                 },
