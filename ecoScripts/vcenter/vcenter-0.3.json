@@ -110,7 +110,7 @@
                     "fetch_target": "SCOPES",
                     "environment_variable_name": "APPSCOPE_NAME",
                     "required": true,
-                    "placeholder": "Default",
+                    "placeholder": "Application Scope Name",
                     "order": 2,
                     "verify": true
                 },
