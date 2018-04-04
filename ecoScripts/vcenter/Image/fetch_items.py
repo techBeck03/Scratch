@@ -85,12 +85,12 @@ if TARGET_ITEM == 'DATACENTERS':
 elif TARGET_ITEM == 'VRFS':
 
     vrfs = tet_get_vrfs(exclusions=['Unknown', 'Tetration'])
-    fetched = [{'name': x['name'], 'value': x['name']} for x in vrfs]
+    fetched = [{'label': x['name'], 'value': x['name']} for x in vrfs]
 
 elif TARGET_ITEM == 'SCOPES':
 
     scopes = tet_get_scopes()
-    fetched = [{'name': x, 'value': x} for x in scopes]
+    fetched = [{'label': x, 'value': x} for x in scopes]
 
 else:
     fetched = []
