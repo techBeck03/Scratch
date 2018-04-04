@@ -92,11 +92,11 @@
                     "verify": false,
                     "children": [
                         {
-                            "name": "tenant_vrfs",
+                            "name": "tenant_vrf",
                             "label": "Tenant VRF Name",
                             "type": "fetch-single",
                             "fetch_target": "VRFS",
-                            "environment_variable_name": "TENANT_VRFS",
+                            "environment_variable_name": "TENANT_VRF",
                             "placeholder": "Tenant VRF Name",
                             "order": 1,
                             "verify": false
