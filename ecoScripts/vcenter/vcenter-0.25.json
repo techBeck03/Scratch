@@ -1,0 +1,233 @@
+{
+    "version": "0.2",
+    "type": "api",
+    "configurable": true,
+    "schedulable": true,
+    "docker_image": "ecohub/vcenter:v0.25",
+    "config_parameters": [
+        {
+            "name": "connection_parameters",
+            "label": "Connection Parameters",
+            "order": 1,
+            "controls": [
+                {
+                    "label": "Clear Cache",
+                    "action": "clear_cache",
+                    "message": "Clearing Local Cache",
+                    "type": "icon",
+                    "icon": {
+                        "group": "action",
+                        "name": "settings_backup_restore"
+                    }
+                },
+                {
+                    "label": "Test Connectivity",
+                    "action": "test_connectivity",
+                    "message": "Testing Connectivity",
+                    "type": "icon",
+                    "icon": {
+                        "group": "action",
+                        "name": "assessment"
+                    }
+                }
+            ],
+            "items": [
+                {
+                    "name": "vc",
+                    "label": "vCenter",
+                    "type": "text",
+                    "environment_variable_name": "VCENTER_HOST",
+                    "required": true,
+                    "placeholder": "vCenter Hostname or IP",
+                    "order": 1,
+                    "verify": true
+                },
+                {
+                    "name": "vc_username",
+                    "label": "VC Username",
+                    "type": "text",
+                    "environment_variable_name": "VCENTER_USER",
+                    "required": true,
+                    "placeholder": "vCenter Username (read-only)",
+                    "order": 2,
+                    "verify": true
+                },
+                {
+                    "name": "vc_password",
+                    "label": "VC Password",
+                    "type": "password",
+                    "environment_variable_name": "VCENTER_PWD",
+                    "required": true,
+                    "placeholder": "vCenter Password",
+                    "order": 3,
+                    "verify": true
+                },
+                {
+                    "name": "vc_datacenter",
+                    "label": "VC Datacenter",
+                    "type": "fetch-single",
+                    "fetch_target": "DATACENTERS",
+                    "environment_variable_name": "VCENTER_DATACENTER",
+                    "required": true,
+                    "placeholder": "vCenter Datacenter",
+                    "order": 4,
+                    "verify": true
+                }
+            ]
+        },
+        {
+            "name": "annotation_options",
+            "label": "Annotation Options",
+            "order": 2,
+            "items": [
+                {
+                    "name": "multitenant",
+                    "label": "Multitenant",
+                    "type": "switch",
+                    "environment_variable_name": "MULTITENANT",
+                    "value": "off",
+                    "popover": "Tetration Multitenant environment",
+                    "placeholder": "",
+                    "order": 1,
+                    "verify": false,
+                    "children": [
+                        {
+                            "name": "tenant_vrfs",
+                            "label": "Tenant VRF Name",
+                            "type": "fetch-single",
+                            "fetch_target": "VRFS",
+                            "environment_variable_name": "TENANT_VRFS",
+                            "placeholder": "Tenant VRF Name",
+                            "order": 1,
+                            "verify": false
+                        }
+                    ]
+                },
+                {
+                    "name": "appscope_name",
+                    "label": "App Scope Name",
+                    "type": "fetch-single",
+                    "fetch_target": "SCOPES",
+                    "environment_variable_name": "APPSCOPE_NAME",
+                    "required": true,
+                    "placeholder": "Default",
+                    "order": 2,
+                    "verify": true
+                },
+                {
+                    "name": "vm_name",
+                    "label": "VM Name",
+                    "type": "switch",
+                    "environment_variable_name": "ENABLE_VM_NAME",
+                    "value": "on",
+                    "popover": "VM name",
+                    "placeholder": "",
+                    "order": 3,
+                    "verify": false,
+                    "children": [
+                        {
+                            "name": "vm_name_annotation_name",
+                            "label": "Tetration Annotation Name",
+                            "type": "text",
+                            "environment_variable_name": "VM_NAME_ANNOTATION_NAME",
+                            "value": "VM Name",
+                            "placeholder": "Tetration Annotation Name",
+                            "order": 1,
+                            "verify": false
+                        }
+                    ]
+                },
+                {
+                    "name": "vm location",
+                    "label": "VM Location",
+                    "type": "switch",
+                    "environment_variable_name": "ENABLE_VM_LOCATION",
+                    "value": "on",
+                    "popover": "Location of VM (ESX Host/Cluster)",
+                    "order": 4,
+                    "verify": false,
+                    "children": [
+                        {
+                            "name": "vm_location_annotation_name",
+                            "label": "Tetration Annotation Name",
+                            "type": "text",
+                            "environment_variable_name": "VM_LOCATION_ANNOTATION_NAME",
+                            "value": "VM Location",
+                            "placeholder": "Tetration Annotation Name",
+                            "order": 1,
+                            "verify": false
+                        }
+                    ]
+                },
+                {
+                    "name": "vm_tags",
+                    "label": "VM Tags",
+                    "type": "switch",
+                    "environment_variable_name": "ENABLE_VM_TAGS",
+                    "value": "off",
+                    "popover": "VM Tags (tag1=value1;tag2=value2;)",
+                    "placeholder": "",
+                    "order": 5,
+                    "verify": false,
+                    "children": [
+                        {
+                            "name": "vm_tags_annotation_name",
+                            "label": "Tetration Annotation Name",
+                            "type": "text",
+                            "environment_variable_name": "VM_TAGS_ANNOTATION_NAME",
+                            "value": "VM Tags",
+                            "placeholder": "Tetration Annotation Name",
+                            "order": 1,
+                            "verify": false
+                        }
+                    ]
+                },
+                {
+                    "name": "vm_attributes",
+                    "label": "Custom Attributes",
+                    "type": "switch",
+                    "environment_variable_name": "ENABLE_CUSTOM_ATTRIBUTES",
+                    "value": "off",
+                    "popover": "Custom Attributes (att1=value1;att2=value2;)",
+                    "placeholder": "",
+                    "order": 6,
+                    "verify": false,
+                    "children": [
+                        {
+                            "name": "custom_attributes_annotation_name",
+                            "label": "Tetration Annotation Name",
+                            "type": "text",
+                            "environment_variable_name": "CUSTOM_ATTRIBUTES_ANNOTATION_NAME",
+                            "value": "VM Custom Attributes",
+                            "placeholder": "Tetration Annotation Name",
+                            "order": 1,
+                            "verify": false
+                        }
+                    ]
+                },
+                {
+                    "name": "vm networks",
+                    "label": "VM Networks",
+                    "type": "switch",
+                    "environment_variable_name": "ENABLE_VM_NETWORK",
+                    "value": "off",
+                    "popover": "VM Networks (PortGroup-1,PortGroup-2)",
+                    "order": 7,
+                    "verify": false,
+                    "children": [
+                        {
+                            "name": "vm_networks_annotation_name",
+                            "label": "Tetration Annotation Name",
+                            "type": "text",
+                            "environment_variable_name": "VM_NETWORKS_ANNOTATION_NAME",
+                            "value": "VM Networks",
+                            "placeholder": "Tetration Annotation Name",
+                            "order": 1,
+                            "verify": false
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
