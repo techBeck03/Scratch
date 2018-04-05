@@ -2,7 +2,13 @@
 This script is set up to fetch data from either vCenter (DATACENTERS) or
 Tetration (VRFS or SCOPES).
 
-It returns that list in the 'data' portion of an ecohub pigeon message.
+It returns one of those as a  list in the 'data' portion of an ecohub pigeon
+message. It takes this format:
+[
+    {'label': 'item1', 'value': 'item1'},
+    {'label': 'item2', 'value': 'item2'},
+    {'label': 'item3', 'value': 'item3'}
+]
 
 Author: Doron Chosnek, Cisco Systems, February 2018
 """
@@ -50,10 +56,11 @@ def tet_get_scopes():
     restclient = tet_connect()
     vrf_list = tet_get_vrfs(exclusions=[])
     vrf_id = 1
-    for v in vrf_list:
-        if v['name'] == os.environ['TENANT_VRF']:
-            vrf_id = v['vrf_id']
-            break
+    if 'TENANT_VRF' in os.environ:
+        for v in vrf_list:
+            if v['name'] == os.environ['TENANT_VRF']:
+                vrf_id = v['vrf_id']
+                break
     resp = restclient.get('/openapi/v1/app_scopes')
     return [x['name'] for x in resp.json() if x['vrf_id'] == vrf_id]
 
@@ -62,12 +69,8 @@ def tet_get_scopes():
 # Main
 # -----------------------------------------------------------------------------
 
-# set up the structure for the message to be returned to ecohub
-pigeon = {
-        "status_code": 400,
-        "data": [],
-        "message": ""
-    }
+# Start with a large IF statement that checks for the three possible values for
+# the FETCH_TARGET environment variable.
 
 if TARGET_ITEM == 'DATACENTERS':
 
@@ -83,19 +86,21 @@ if TARGET_ITEM == 'DATACENTERS':
     fetched = [{'label': dc.name, 'value': dc.name} for dc in dcenters]
 
 elif TARGET_ITEM == 'VRFS':
-
+    # get all VRFs except for Unknown and Tetration
     vrfs = tet_get_vrfs(exclusions=['Unknown', 'Tetration'])
     fetched = [{'label': x['name'], 'value': x['name']} for x in vrfs]
 
 elif TARGET_ITEM == 'SCOPES':
-
+    # get all scopes; if a TENANT_VRF is specified then get only those scopes
+    # in that VRF
     scopes = tet_get_scopes()
     fetched = [{'label': x, 'value': x} for x in scopes]
 
 else:
     fetched = []
 
-# format the pigeon to return results to ecohub
+# Format the pigeon to return results to ecohub. If nothing was found (data
+# contains an empty list), then that must be an error.
 if len(fetched):
     pigeon = {
         "status_code": 200,
