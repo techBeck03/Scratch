@@ -13,6 +13,7 @@ Tetration. If there is not a previously saved version, then the script
 passes the entire list of annotations off.
 #>
 
+# 17.114072 seconds to run against Blades datacenter with everything enabled
 
 $DISPLAY_ON_TEXT = 'on'
 
@@ -147,12 +148,12 @@ function Get-VMDetails {
 
             # save VM name even if it hasn't been requested; it's probably faster to just
             # save it than execute a conditional
-            if ($env:VM_NAME_ANNOTATION_NAME -like $DISPLAY_ON_TEXT) {
+            if ($env:ENABLE_VM_NAME -like $DISPLAY_ON_TEXT) {
                 $properties[$env:VM_NAME_ANNOTATION_NAME] = $Vm.Name
             }
 
             # save VM location even if it hasn't been requested
-            if ($env:VM_LOCATION_ANNOTATION_NAME -like $DISPLAY_ON_TEXT) {
+            if ($env:ENABLE_VM_LOCATION -like $DISPLAY_ON_TEXT) {
                 $properties[$env:VM_LOCATION_ANNOTATION_NAME] = "$($Vm.VMHost) / $($Vm | Get-Cluster)" 
             }
 
