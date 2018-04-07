@@ -10,8 +10,39 @@ message. It takes this format:
     {'label': 'item3', 'value': 'item3'}
 ]
 
-Author: Doron Chosnek, Cisco Systems, February 2018
+Keyword environment variables:
+--APPSCOPE_NAME: name of scope from which we want to retrieve all IP addresses
+--TETRATION_ENDPOINT: URL of the Tetration UI
+--TETRATION_API_KEY: key for Tetration API access
+--TETRATION_API_SECRET: secret for the above key
+--VCENTER_HOST: hostname or IP address for vCenter
+--VCENTER_USER: username with proper capabilities in vCenter
+--VCENTER_PWD: password for vCenter
+--DEBUG: determines if Pigeons are displayed minimized or with indentation to
+    make them more readable
+
+The user must supply either a credentials file *OR* the key and secret as
+arguments, but not both.
+
+Copyright (c) 2018 Cisco and/or its affiliates.
+
+This software is licensed to you under the terms of the Cisco Sample
+Code License, Version 1.0 (the "License"). You may obtain a copy of the
+License at
+
+               https://developer.cisco.com/docs/licenses
+
+All use of the material herein must be in accordance with the terms of
+the License. All rights not expressly granted by the License are
+reserved. Unless required by applicable law or agreed to separately in
+writing, software distributed under the License is distributed on an "AS
+IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+or implied.
 """
+
+__author__ = "Doron Chosnek"
+__copyright__ = "Copyright (c) 2018 Cisco and/or its affiliates."
+__license__ = "Cisco Sample Code License, Version 1.0"
 
 # pylint: disable=invalid-name
 
