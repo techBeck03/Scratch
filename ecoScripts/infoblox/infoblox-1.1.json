@@ -183,7 +183,7 @@
                         {
                             "name": "ea_list",
                             "label": "Extensible Attributes",
-                            "type": "fetch-list",
+                            "type": "fetch-objects",
                             "fetch_target": "EXT_ATTRS",
                             "environment_variable_name": "EA_LIST",
                             "value": "",
