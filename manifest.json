@@ -3,9 +3,9 @@
         "name": "vcenter",
         "label": "vCenter Annotations",
         "versions": [
-            "0.2"
+            "0.2", "0.3"
         ],
-        "latest": "0.2",
+        "latest": "0.3",
         "path": "https://github.com/techBeck03/Scratch/raw/master/ecoScripts/vcenter",
         "icon": "icon.png",
         "tags": "vmware",

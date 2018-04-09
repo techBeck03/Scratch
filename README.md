@@ -124,8 +124,57 @@ Docker images can be downloaded and run independently of the ecohub portal, so t
 
 ## Manifest.json
 
-Will add more detail here as time permits.
+A *manifest* file defines a list of **all** of the integrations available to ecohub. It is a single JSON file stored on github. An ecohub architect will help you define this structure for your integration and add it to the main `manifest.json` file. Because this file contains information about **all** the integrations, that information is high-level. Greater detail exists in a JSON file in the subdirectory where the integration is stored. The structure for one integration looks like:
+
+```json
+{
+    "name": "vcenter",
+    "label": "vCenter Annotations",
+    "versions": [
+        0.2
+    ],
+    "latest": 0.2,
+    "path": "https://github.com/techBeck03/Scratch/raw/master/ecoScripts/vcenter",
+    "icon": "icon.png",
+    "tags": "vmware",
+    "required_targets": ["tetration"]
+},
+```
+The `label` field represents the friendly name for the *image*. It will be visible to the ecohub user.
+
+The `versions` field defines all available versions of the integration, but ecohub presently only uses the `latest` version.
+
+Your integration will pull information from one source and then push it to one or more *targets*. For example, your integration might pull rich data from an IPAM and push it to Tetration as annotations. ecohub architecture supports different *targets*, but only `tetration` is currently supported for `required_targets`.
 
 ## Your integration JSON file
+
+Every integration requires its own JSON manifest file that describes the image details and the ecohub HTML form details. Here is a summary of the JSON format:
+
+```json
+{
+    "version": "0.2",
+    "type": "api",
+    "configurable": true,
+    "schedulable": true,
+    "docker_image": "ecohub/vcenter:v0.2",
+    "config_parameters": [ ... ]
+}
+```
+
+### Image details
+
+The top portion of the JSON structure describe an image.
+
+`version` describes the version number of the integration. This is displayed in a few places within the ecohub web portal, so make sure it is accurate.
+
+`type` is always set to `api` at this time.
+
+`configurable` is a boolean (true/false) that indicates whether or not the integration has parameters that can be specified by the end user. There are no integrations at this time that should use a value other than `true` for this parameter.
+
+`schedulable` is a boolean (true/false) that indicates whether or not a user should be allowed to run this integration on a schedule. Not all integrations should be schedulable. For example, an integration that simply does a file conversion should be run interactively and not on a schedule.
+
+`docker_image` points to the location on Docker Hub where the Docker image can be found.
+
+### Configuration parameters
 
 Will add more detail here as time permits.
