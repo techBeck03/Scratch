@@ -150,7 +150,6 @@ def main():
         create_network_filters()
         if(tetration.inventory.hasNext is False):
            break
-        time.sleep(2)
     update_subnets()
     PIGEON.note.update({
         'status_code': 200,
