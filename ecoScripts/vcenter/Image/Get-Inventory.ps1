@@ -59,6 +59,8 @@ $VM_TAGS_ANNOTATION = $env:VM_TAGS_ANNOTATION_NAME
 $VM_NETWORKS_ANNOTATION = $env:VM_NETWORKS_ANNOTATION_NAME
 $VM_CUSTOM_ATT_ANNOTATION = $env:CUSTOM_ATTRIBUTES_ANNOTATION_NAME
 if($env:ENABLE_CUSTOM_ATTRIBUTES -eq $DISPLAY_ON_TEXT) { $ENABLE_CUST_ATT = $true } else { $ENABLE_CUST_ATT = $false }
+if($env:ENABLE_VM_NETWORK -like $DISPLAY_ON_TEXT) { $ENABLE_NETWORKS = $true } else { $ENABLE_NETWORKS = $false }
+if($env:ENABLE_VM_TAGS -like $DISPLAY_ON_TEXT) { $ENABLE_TAGS = $true } else { $ENABLE_TAGS = $false }
 
 # ============================================================================
 #   FUNCTIONS
@@ -130,15 +132,12 @@ function Get-CsvDiffs {
             $notAdded = $true
             foreach ($p in $props) {
                 if ([string]$line.$p -ne [string]$oldMatch.$p -and $notAdded) {
-                    # Write-Host "ERROR $($line.IP) have non-matching $($p)"
-                    # Write-Host $line.$p, $oldMatch.$p
                     $diffs += $line
                     $notAdded = $false
                 }
             }
         }
         else {
-            # Write-Host "$($line.IP) is a new IP"
             $diffs += $line
         }
     }
@@ -171,53 +170,70 @@ function Get-VMDetails {
         $counter = 0
         $progress = 10
 
+        # List of all IP addresses in the given VRF or scope as determined by
+        # another script (so we just read it from a file)
         $ip_list = Get-Content $IP_FILENAME | ConvertFrom-Json
+
+        # Create a dictionary of network names and PORT GROUP names. Users want to see
+        # port group names.
+        $network_lookup = @{}
+        Get-VDPortgroup | ForEach-Object { $network_lookup[$_.Key] = $_.Name }
     }
     process {
 
         $counter += 1
         if ($counter / $Total * 100 -ge $progress) {
             SendPigeon -Status 100 -Message "$($progress) percent done looking through vcenter."
-            # $pigeon = @{'status_code'=100; 'message'="$($progress) percent done looking through vcenter."; 'data'=@{}}
-            # Write-Information -MessageData ($pigeon | ConvertTo-Json -Compress) -InformationAction Continue
             $progress += 10
         }
 
-        # we don't do anything with this VM unless this VMTools is running; IP
-        # address data is stale if VMTools is not running
-        if ($Vm.ToolsStatus -match 'toolsOk') {
+        # the VM could contain multiple IP addresses, and each one would
+        # should be its own annotations entry
+        foreach($ip in $Vm.Addresses) {
+            
+            if($ip -match '\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}' -and
+                $ip_list -contains $ip) {
 
-            # the VM could contain multiple IP addresses, and each one would
-            # should be its own annotations entry
-            foreach($ip in $Vm.Addresses) {
+                $properties = @{}
+                $properties.IP = $ip
+                # VRF will be removed later in this script if the environment
+                # is multi-tenant, but it's faster to just put it in right now
+                # than put it in an 'if' statement in this 'process' block
+                $properties.VRF = "Default"
+
+                $properties[$VM_NAME_ANNOTATION] = $Vm.Name
+                $properties[$VM_LOCATION_ANNOTATION] = $Vm.VMHost.Name
                 
-                if($ip -match '\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}' -and
-                    $ip_list -contains $ip) {
-
-                    $properties = @{}
-                    $properties.IP = $ip
-                    $properties.VRF = "Default"
-
-                    $properties[$VM_NAME_ANNOTATION] = $Vm.Name
-                    $properties[$VM_LOCATION_ANNOTATION] = $Vm.Location
+                # Acquiring this property takes a lot of time
+                if($ENABLE_TAGS) {
                     $properties[$VM_TAGS_ANNOTATION] = $Vm.Tags
-                    $properties[$VM_NETWORKS_ANNOTATION] = $Vm.Networks
-
-                    # save VM Custom Attributes if requested to do so; Custom Attributes
-                    # are name/value keypair of attributes that can be set per VM
-                    if ($ENABLE_CUST_ATT) {
-                        $Vm | Get-Annotation | % -Begin {
-                            $list = @() } -Process {
-                            $list += "$($_.Name)=$($_.Value)" } -End {
-                            $properties[$VM_CUSTOM_ATT_ANNOTATION] = ($list -join ";")
-                        }
-                    }
-
-                    $all_vms += New-Object -TypeName PSObject -Property $properties
-
                 }
+
+                # Networks is actually a delimited list of every network that
+                # the **VM** is connected to. It's not specific to one IP
+                # address as most people would hope. That would probably take
+                # too long to compute.
+                if ($ENABLE_NETWORKS) {
+                    $Vm.Networks | % -Begin { $list = @() } -Process {
+                        $list += $network_lookup[$_] } -End {
+                        $properties[$VM_NETWORKS_ANNOTATION] = ($list -join ";")
+                    }
+                }
+
+                # save VM Custom Attributes if requested to do so; Custom Attributes
+                # are name/value keypair of attributes that can be set per VM
+                if ($ENABLE_CUST_ATT) {
+                    $Vm.CustomFields | % -Begin { $list = @() } -Process {
+                        $list += "$($_.Key)=$($_.Value)" } -End {
+                        $properties[$VM_CUSTOM_ATT_ANNOTATION] = ($list -join ";")
+                    }
+                    
+                }
+
+                $all_vms += New-Object -TypeName PSObject -Property $properties
+
             }
-        } # end of "if ($Vm.ToolsStatus -match 'toolsOk')"
+        } # end of "foreach IP" loop
     }     # end of "process" loop
     end {
         return $all_vms
@@ -227,24 +243,6 @@ function Get-VMDetails {
 # ============================================================================
 #   MAIN
 # ----------------------------------------------------------------------------
-
-# Set up additional properties that will be available when performing a Get-VM cmdlet.
-New-VIProperty -Name ToolsStatus -ObjectType VirtualMachine -ValueFromExtensionProperty 'Guest.ToolsStatus' -Force | Out-Null
-New-VIProperty -Name Location -ObjectType VirtualMachine -Value { $args[0].VMHost } -Force | Out-Null
-New-VIProperty -Name Tags -ObjectType VirtualMachine -Value { ($args[0] | Get-TagAssignment | select -ExpandProperty Tag).Name -join ";" } -Force | Out-Null
-New-VIProperty -Name Networks -ObjectType VirtualMachine -Value { $args[0].Guest.Nics.Device.NetworkName -join ";" } -Force | Out-Null
-New-VIProperty -Name Addresses -ObjectType VirtualMachine -Value { $args[0].Guest.IpAddress } -Force | Out-Null
-
-# determine if we are running in a container or not by checking to see if 
-# the directory /private exists...that determines the location of the 
-# annotations and date files
-
-if (Test-Path '/private') {
-    $INVENTORY_PATH = $INVENTORY_FILE_DOCKER
-}
-else {
-    $INVENTORY_PATH = $INVENTORY_FILE_LOCAL
-}
 
 # try connecting to vCenter and throw an error if there is a problem; this
 # error checking is not robust because ecohub should have already verified
@@ -257,6 +255,26 @@ try {
 catch {
     SendPigeon -Status 400 -Message "Error connecting to VCENTER"
     Exit
+}
+
+# Set up additional properties that will be available when performing a Get-VM
+# cmdlet.The properties created as "ValueFromExtensionProperty" are very
+# efficient and do not seem to require additional calls to vCenter.
+New-VIProperty -Name ToolsStatus -ObjectType VirtualMachine -ValueFromExtensionProperty 'Guest.ToolsStatus' -Force | Out-Null
+New-VIProperty -Name Addresses -ObjectType VirtualMachine -ValueFromExtensionProperty 'Guest.Net.IpAddress' -Force | Out-Null
+New-VIProperty -Name Networks -ObjectType VirtualMachine -ValueFromExtensionProperty 'Network.Value' -Force | Out-Null
+
+New-VIProperty -Name Tags -ObjectType VirtualMachine -Value { ($args[0] | Get-TagAssignment | select -ExpandProperty Tag).Name -join ";" } -Force | Out-Null
+
+# determine if we are running in a container or not by checking to see if 
+# the directory /private exists...that determines the location of the 
+# annotations and date files
+
+if (Test-Path '/private') {
+    $INVENTORY_PATH = $INVENTORY_FILE_DOCKER
+}
+else {
+    $INVENTORY_PATH = $INVENTORY_FILE_LOCAL
 }
 
 # set up the headings that we want in our final CSV; we have to do this here so that
@@ -291,10 +309,20 @@ if ($env:ENABLE_VM_NETWORK -like $DISPLAY_ON_TEXT) {
 
 # retrieve the current inventory regardless
 
-SendPigeon -Status 100 -Message "Collecting details from vCenter..."
-
-$vm_list = (Get-Datacenter $Env:VCENTER_DATACENTER | Get-VM)
+$vm_list = (Get-Datacenter $Env:VCENTER_DATACENTER | Get-VM | ? {$_.ToolsStatus -match 'toolsOk'})
+SendPigeon -Status 100 -Message "Collecting details from vCenter for $($vm_list.Count) VMs"
 $current = $vm_list | Get-VMDetails -Total $vm_list.Count | Select-Object $headings
+
+# Only save entries that have unique IP addresses. If an IP address appears
+# more than once, we don't know how to properly annotate it (so we exclude it).
+
+$unique = @()
+foreach($blob in $current | Group-Object IP) {
+    if($blob.Count -eq 1)
+    {
+        foreach($entry in $blob.Group) { $unique += $entry }
+    }
+}
 
 if (Test-Path $INVENTORY_PATH) {
 
@@ -302,7 +330,7 @@ if (Test-Path $INVENTORY_PATH) {
 
     SendPigeon -Status 100 -Message "Looking for inventory changes since last run..."
     $previous = Import-Csv $INVENTORY_PATH
-    $changes = Get-CsvDiffs -OldFile $previous -NewFile $current
+    $changes = Get-CsvDiffs -OldFile $previous -NewFile $unique
 
     $change_count = ($changes | Measure-Object).Count
     SendPigeon -Status 100 -Message "Found $($change_count) annotation changes."
@@ -316,13 +344,13 @@ if (Test-Path $INVENTORY_PATH) {
 else {
 
     # if this code is executing, this script has **NOT** been run before
-
-    $current | Select-Object $headings | Export-Csv $ANNOTATIONS_DIFF_FILE -NoTypeInformation
+    SendPigeon -Status 100 -Message "Found $($unique.Count) IP addresses for annotation."
+    $unique | Select-Object $headings | Export-Csv $ANNOTATIONS_DIFF_FILE -NoTypeInformation
 }
 
 # write the current inventory to disk
 
-$current | Select-Object $headings | Export-Csv $INVENTORY_PATH -NoTypeInformation
+$unique | Select-Object $headings | Export-Csv $INVENTORY_PATH -NoTypeInformation
 
 # shut down connection to vCenter
 
