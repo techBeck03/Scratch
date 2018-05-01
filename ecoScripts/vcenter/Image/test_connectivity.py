@@ -89,7 +89,7 @@ def test_vcenter():
     if status == 200:
         try:
             DCENTER = os.environ['VCENTER_DATACENTER']
-            if DCENTER not in [dc.name for dc in vc.content.rootFolder.childEntity]:
+            if len(DCENTER) and DCENTER not in [dc.name for dc in vc.content.rootFolder.childEntity]:
                 return (400, "VCENTER datacenter '{}' not found".format(DCENTER))
         except:
             return (400, "Error retrieving list of datacenters from VCENTER")

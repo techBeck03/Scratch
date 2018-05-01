@@ -46,9 +46,9 @@ from tetpyclient import RestClient
 # script was run; it is non-persistent because it is saved to the local
 # filesystem of the container and the container is deleted when it's done
 ANNOTATIONS_DIFF_FILE = 'upload.csv'
-DISPLAY_ON_TEXT = 'on'
+DISPLAY_ON_TEXT = ['on', 'true', 'yes', '1', 'okay']
 
-if os.environ['MULTITENANT'] == DISPLAY_ON_TEXT:
+if os.environ['MULTITENANT'].lower() in DISPLAY_ON_TEXT:
     APPSCOPE = '/' + os.environ['TENANT_VRF']
 else:
     APPSCOPE = ''
