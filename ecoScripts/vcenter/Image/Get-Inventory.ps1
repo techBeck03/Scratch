@@ -39,7 +39,8 @@ __license__ = "Cisco Sample Code License, Version 1.0"
 #   GLOBALS
 # ----------------------------------------------------------------------------
 
-$DISPLAY_ON_TEXT = 'on'
+# the PowerShell -contains switch is case insensitive
+$DISPLAY_ON_TEXT = @('on', 'true', '1', 'yes')
 
 # this file is persistent and contains the full inventory of the Datacenter
 $INVENTORY_FILE_LOCAL = 'inventory.csv'
@@ -58,9 +59,9 @@ $VM_LOCATION_ANNOTATION = $env:VM_LOCATION_ANNOTATION_NAME
 $VM_TAGS_ANNOTATION = $env:VM_TAGS_ANNOTATION_NAME
 $VM_NETWORKS_ANNOTATION = $env:VM_NETWORKS_ANNOTATION_NAME
 $VM_CUSTOM_ATT_ANNOTATION = $env:CUSTOM_ATTRIBUTES_ANNOTATION_NAME
-if($env:ENABLE_CUSTOM_ATTRIBUTES -eq $DISPLAY_ON_TEXT) { $ENABLE_CUST_ATT = $true } else { $ENABLE_CUST_ATT = $false }
-if($env:ENABLE_VM_NETWORK -like $DISPLAY_ON_TEXT) { $ENABLE_NETWORKS = $true } else { $ENABLE_NETWORKS = $false }
-if($env:ENABLE_VM_TAGS -like $DISPLAY_ON_TEXT) { $ENABLE_TAGS = $true } else { $ENABLE_TAGS = $false }
+if($DISPLAY_ON_TEXT -contains $env:ENABLE_CUSTOM_ATTRIBUTES) { $ENABLE_CUST_ATT = $true } else { $ENABLE_CUST_ATT = $false }
+if($DISPLAY_ON_TEXT -contains $env:ENABLE_VM_NETWORK) { $ENABLE_NETWORKS = $true } else { $ENABLE_NETWORKS = $false }
+if($DISPLAY_ON_TEXT -contains $env:ENABLE_VM_TAGS) { $ENABLE_TAGS = $true } else { $ENABLE_TAGS = $false }
 
 # ============================================================================
 #   FUNCTIONS
@@ -280,31 +281,50 @@ else {
 # set up the headings that we want in our final CSV; we have to do this here so that
 # they appear in the right order
 
-if ($env:MULTITENANT -like $DISPLAY_ON_TEXT) {
-    $headings = @("IP")
-}
-else {
-    $headings = @("IP", "VRF")
-}
+$headings = @()
 
-if ($env:ENABLE_VM_NAME -like $DISPLAY_ON_TEXT) {
+if ($DISPLAY_ON_TEXT -contains $env:ENABLE_VM_NAME) {
     $headings += $VM_NAME_ANNOTATION
 }
 
-if ($env:ENABLE_VM_LOCATION -like $DISPLAY_ON_TEXT) {
+if ($DISPLAY_ON_TEXT -contains $env:ENABLE_VM_LOCATION) {
     $headings += $VM_LOCATION_ANNOTATION
 }
 
-if ($env:ENABLE_VM_TAGS -like $DISPLAY_ON_TEXT) {
+if ($DISPLAY_ON_TEXT -contains $env:ENABLE_VM_TAGS) {
     $headings += $VM_TAGS_ANNOTATION
 }
 
-if ($env:ENABLE_CUSTOM_ATTRIBUTES -like $DISPLAY_ON_TEXT) {
+if ($DISPLAY_ON_TEXT -contains $env:ENABLE_CUSTOM_ATTRIBUTES) {
     $headings += $env:CUSTOM_ATTRIBUTES_ANNOTATION_NAME
 }
 
-if ($env:ENABLE_VM_NETWORK -like $DISPLAY_ON_TEXT) {
+if ($DISPLAY_ON_TEXT -contains $env:ENABLE_VM_NETWORK) {
     $headings += $VM_NETWORKS_ANNOTATION
+}
+
+# if $headings is still empty, then there is nothing for us to do here (the
+# user chose no annotations to upload) and we must:
+# 1. Send an error message
+# 2. Remove the upload.csv file if one exists
+# 3. Exit the script
+
+if ($headings.Length -lt 1) {
+    SendPigeon -Status 400 -Message "User must choose at least one attribute for annotations."
+    if(Test-Path $ANNOTATIONS_DIFF_FILE) {
+        Remove-Item $ANNOTATIONS_DIFF_FILE
+    }
+    return
+}
+
+# Make sure the first column (in multitenant mode) or the first two columns
+# (in normal mode) are set properly
+
+if ($DISPLAY_ON_TEXT -contains $env:MULTITENANT) {
+    $headings = @("IP") + $headings
+}
+else {
+    $headings = @("IP", "VRF") + $headings
 }
 
 # retrieve the current inventory regardless
