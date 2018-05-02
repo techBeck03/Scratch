@@ -183,7 +183,7 @@
                         {
                             "name": "ea_list",
                             "label": "Extensible Attributes",
-                            "type": "fetch-list",
+                            "type": "fetch-objects",
                             "fetch_target": "EXT_ATTRS",
                             "environment_variable_name": "EA_LIST",
                             "value": "",
@@ -201,6 +201,16 @@
             "label": "Inventory Filters",
             "order": 3,
             "controls": [
+                {
+                    "label": "Clear Cache",
+                    "action": "clear_cache",
+                    "message": "Clearing inventory filter cache for known subnets",
+                    "type": "icon",
+                    "icon": {
+                        "group": "action",
+                        "name": "settings_backup_restore"
+                    }
+                },
                 {
                     "label": "Update Filters",
                     "action": "create_filters",
