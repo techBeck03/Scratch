@@ -245,6 +245,49 @@ function Get-VMDetails {
 #   MAIN
 # ----------------------------------------------------------------------------
 
+# Set up the headings for the final CSV file. We do that first so that if the
+# user forgot to select any annotations columns, we will report an error and
+# exit this script without even connecting to vCenter (no reason to hit the
+# vCenter API if we aren't going to save any data).
+
+# Stepping through a list of hashes where each hash contains whether or not
+# the given annotation is enabled/disabled and what the column name should be.
+# This format makes it much easier to add more annotations in the future.
+
+$headings = @()
+foreach($h in @(
+    @{n=$env:ENABLE_VM_NAME; v=$env:VM_NAME_ANNOTATION_NAME},
+    @{n=$env:ENABLE_VM_LOCATION; v=$env:VM_LOCATION_ANNOTATION_NAME},
+    @{n=$env:ENABLE_VM_TAGS; v=$env:VM_TAGS_ANNOTATION_NAME},
+    @{n=$env:ENABLE_CUSTOM_ATTRIBUTES; v=$env:CUSTOM_ATTRIBUTES_ANNOTATION_NAME},
+    @{n=$env:ENABLE_VM_NETWORK; v=$env:VM_NETWORKS_ANNOTATION_NAME} )) 
+{
+    if($DISPLAY_ON_TEXT -contains $h.n) { $headings += $h.v }
+}
+
+# if $headings is still empty, then there is nothing for us to do here (the
+# user chose no annotations to upload) and we must:
+# 1. Send an error message
+# 2. Remove the upload.csv file if one exists
+# 3. Exit the script
+if ($headings.Length -lt 1) {
+    SendPigeon -Status 400 -Message "User must choose at least one attribute for annotations."
+    if(Test-Path $ANNOTATIONS_DIFF_FILE) {
+        Remove-Item $ANNOTATIONS_DIFF_FILE
+    }
+    return
+}
+
+# Make sure the first column (in multitenant mode) or the first two columns
+# (in normal mode) are set properly
+if ($DISPLAY_ON_TEXT -contains $env:MULTITENANT) {
+    $headings = @("IP") + $headings
+}
+else {
+    $headings = @("IP", "VRF") + $headings
+}
+
+
 # try connecting to vCenter and throw an error if there is a problem; this
 # error checking is not robust because ecohub should have already verified
 # connectivity using the TEST_CONNECTIVITY action provided by this container
@@ -278,56 +321,7 @@ else {
     $INVENTORY_PATH = $INVENTORY_FILE_LOCAL
 }
 
-# set up the headings that we want in our final CSV; we have to do this here so that
-# they appear in the right order
-
-$headings = @()
-
-if ($DISPLAY_ON_TEXT -contains $env:ENABLE_VM_NAME) {
-    $headings += $VM_NAME_ANNOTATION
-}
-
-if ($DISPLAY_ON_TEXT -contains $env:ENABLE_VM_LOCATION) {
-    $headings += $VM_LOCATION_ANNOTATION
-}
-
-if ($DISPLAY_ON_TEXT -contains $env:ENABLE_VM_TAGS) {
-    $headings += $VM_TAGS_ANNOTATION
-}
-
-if ($DISPLAY_ON_TEXT -contains $env:ENABLE_CUSTOM_ATTRIBUTES) {
-    $headings += $env:CUSTOM_ATTRIBUTES_ANNOTATION_NAME
-}
-
-if ($DISPLAY_ON_TEXT -contains $env:ENABLE_VM_NETWORK) {
-    $headings += $VM_NETWORKS_ANNOTATION
-}
-
-# if $headings is still empty, then there is nothing for us to do here (the
-# user chose no annotations to upload) and we must:
-# 1. Send an error message
-# 2. Remove the upload.csv file if one exists
-# 3. Exit the script
-
-if ($headings.Length -lt 1) {
-    SendPigeon -Status 400 -Message "User must choose at least one attribute for annotations."
-    if(Test-Path $ANNOTATIONS_DIFF_FILE) {
-        Remove-Item $ANNOTATIONS_DIFF_FILE
-    }
-    return
-}
-
-# Make sure the first column (in multitenant mode) or the first two columns
-# (in normal mode) are set properly
-
-if ($DISPLAY_ON_TEXT -contains $env:MULTITENANT) {
-    $headings = @("IP") + $headings
-}
-else {
-    $headings = @("IP", "VRF") + $headings
-}
-
-# retrieve the current inventory regardless
+# retrieve the current inventory
 
 $vm_list = (Get-Datacenter $Env:VCENTER_DATACENTER | Get-VM | ? {$_.ToolsStatus -match 'toolsOk'})
 SendPigeon -Status 100 -Message "Collecting details from vCenter for $($vm_list.Count) VMs"
