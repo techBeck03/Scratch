@@ -47,9 +47,12 @@ for file in glob.glob("/private/*.csv"):
 ```
 
 ### FETCH_ITEMS
-To make it easier on the user, this integration can retrieve a list of datacenters that are available to the supplied credentials. This allows ecohub to show VMware Datacenter names as a dropdown list rather than have the user type the name manually.
+To make it easier on the user, this integration can retrieve different lists so the user can select an item from a list rather than type them. The following lists can be feteched:
+- *DATACENTERS*: list of datacenters that are available to the supplied credentials
+- *VRFS*: For multitenant implementations, a list of VRFs can be retrieved.
+- *SCOPES*: a list of all scopes; if a TENANT_VRF is specified then get only those scopes in that VRF
 
-Fetching items is handled by the script `fetch_items.py`, which looks at an environment variable to determine what should be fetched. Since the script only supports datacenters at this time, any other requested value will return a `400` error pigeon message.
+Fetching items is handled by the script `fetch_items.py`, which looks at an environment variable to determine what should be fetched.
 
 ## Environment Variables
 
@@ -64,6 +67,9 @@ All ecohub scripts use environment variables for their arguments. This section d
 - *VCENTER_PWD* (string) vCenter user password
 - *VCENTER_DATACENTER* (string) name of the Datacenter whose VMs should be examined
 - *ACTION* (string) the action that the eco script should perform such as `TEST_CONNECTIVITY`
+- *MULTITENANT* (string) set to either "on" or "off" to specify if this is a multitenant implementation
+- *TENANT_VF* (string) name of the VRF to be examined; this variable is used only if *multitenant* is "on"
+- *APPSCOPE_NAME* (string) can be set to "Default" to look at all IPs in the Default app scope, or the user can choose to narrow it down more
 - *ENABLE_VM_NAME* (string) set to either "on" or "off" to define if the user wants to retrieve VM Name. If it is set to "on" then you must also define the *VM_NAME_ANNOTATION_NAME* (string) variable to define the CSV column heading that will be used for VM Name.
 - *ENABLE_VM_LOCATION* (string) set to either "on" or "off" to define if the user wants to retrieve VM location (host and cluster). If it is set to "on" then you must also define the *VM_LOCATION_ANNOTATION_NAME* (string) variable to define the CSV column heading that will be used for VM location.
 - *ENABLE_VM_TAGS* (string) set to either "on" or "off" to define if the user wants to retrieve VMware VM tags. If it is set to "on" then you must also define the *VM_TAGS_ANNOTATION_NAME* (string) variable to define the CSV column heading that will be used for VM tags.
@@ -81,10 +87,10 @@ There is only one optional environment variable for this script.
 
 The most useful helper script in this repository, `Get-DockerCommand.ps1` will read a list of environment variables from `env.json` and:
 
-1. Display all of the commands required to set all of those as temporary environment variables in Linux. It's easy to copy this output and paste it into a Linux console to make development and testing easier.
-2. Display the Docker command that is required run this container (assuming the image is built and available on the local machine).
-3. Copy the above Docker command to the clipboard.
-4. Set all of the environment variables as temporary environment variables in the local PowerShell console. That really helps with local development and debug.
+- Display all of the commands required to set all of those as temporary environment variables in Linux. It's easy to copy this output and paste it into a Linux console to make development and testing easier.
+- Display the Docker command that is required run this container (assuming the image is built and available on the local machine).
+- Copy the above Docker command to the clipboard.
+- Set all of the environment variables as temporary environment variables in the local PowerShell console. That really helps with local development and debug.
 
 ### download_annotations.py
 
