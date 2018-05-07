@@ -5,14 +5,13 @@
 Each ecohub integration should contain a *Dockerfile*. Once you pull the repository from github, just issue the following command to create the Docker *image* (this command generates one image with two different tags). *The period at the end of the command refers to the current working directory.*
 
 ```docker
-docker build -t ecohub/example:v0.1 -t ecohub/example:latest .
+docker build -t ecohub/example:v0.1 -t ecohub/example:version .
 ```
 
 
-When the build is complete, you should see three new images when you run the `docker images` command:
+When the build is complete, you should see two images when you run the `docker images` command:
 1. centos:centos7.4.1708 (or whatever base image you are using)
-2. ecohub/example:v0.1
-3. ecohub/example:latest
+2. ecohub/example:*version*
 
 ## Docker volume
 

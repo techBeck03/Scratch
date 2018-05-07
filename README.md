@@ -75,30 +75,16 @@ When ecohub runs a container with the FETCH_ITEMS `ACTION` environment variable,
 {
     "status_code": 200,
     "message": "Data fetched successfully.",
-    "data": {}
-}
-```
-
-### Action: CUSTOM
-
-At this time, there are no CUSTOM actions defined in any ecohub integrations. Docker images that do not implement the CUSTOM action should return a pigeon like:
-
-```json
-{
-    "status_code": 404,
-    "message": "Requested action CUSTOM not implemented",
-    "data": 
-        [
-            {
-                "label": "First label",
-                "value": "First value"
-            },
-            {
-                "label": "Second label",
-                "value": "Second value"
-            }
-
-        ]
+    "data": [
+        {
+            "label": "First label",
+            "value": "First value"
+        },
+        {
+            "label": "Second label",
+            "value": "Second value"
+        }
+    ]
 }
 ```
 

@@ -1,7 +1,9 @@
 ## ![alt text](https://github.com/techBeck03/Scratch/raw/master/ecoScripts/vcenter/icon.png "Logo") vCenter Annotations
 
 ### Overview
-The vCenter integration generates user annotations for your Tetration deployment based on rich data pulled from a single datacenter in vCenter.
+The vCenter integration generates user annotations for your Tetration deployment based on rich data pulled from a single datacenter in vCenter. You may specify an App Scope and only annotations for machines in that App Scope will be created/updated.
+
+This integration supports multitenant implementations of Tetration. If specified, only the annotations for a specific VRF will be created/updated.
 
 ecohub users can selectively annotate based on any number of the following properties:
 
@@ -11,11 +13,11 @@ ecohub users can selectively annotate based on any number of the following prope
 - vSphere Tags
 - VM Custom Attributes
 
-The integration will always get the IP address for each VM.
-
 ### Behavior
 
-The first time the deployment executes, it retrieves all of the desired information about every virtual machine in the specified Datacenter. It then pushes that data to Tetration, including only information about virtual machines that have a valid IP address. *Note that vCenter can only report the IP address for virtual machines running VMware Tools.*
+Only IP addresses that exist in the specified App Scope are affected. This is determined by retrieving a list of IP addresses from Tetration that exist in that App Scope.
+
+The first time the deployment executes, it retrieves all of the desired information about every virtual machine in the specified Datacenter. It then pushes that data to Tetration, including only information about virtual machines whose IP address exists in the specified App Scope. *Note that vCenter can only report the IP address for virtual machines running VMware Tools.*
 
 Each subsequent time the deployment executes, it still retrieves information about every virtual machine in the specified Datacenter, but it only pushes *changes* to Tetration.
 
@@ -33,6 +35,10 @@ This section desribes how to configure a **deployment** of the vCenter Annotatio
 - **VC Datacenter** defines the vCenter Datacenter object from which to pull data. If information from more than one Datacenter is required, simply create multiple deployments of the vCenter image (more details below).
 
 #### Annotation Options
+
+- **Multitenant** is a toggle switch that specifies if the user wants to only affect annotations inside a tenant VRF
+- **Tenant VRF** allows the user to select from a dropdown list of VRFs in Tetration.
+- **App Scope** allows the user to select a scope other than *Default* for which to annotate. This allows the user to narrow the scope of the annotations uploaded to Tetration by this implementation.
 
 - **VM Name** is a toggle switch that determines if the virtual machine name is included in annotations pushed to Tetration. When this toggle is on, the name of the annotation used for VM Name can be customized. More details are provided below.
 - **VM Location** is a toggle switch that determines if the virtual machine location is included in annotations pushed to Tetration. VM location is specified in the format: `"host / cluster`". When this toggle is on, the name of the annotation used for VM Location can be customized. More details are provided below.
