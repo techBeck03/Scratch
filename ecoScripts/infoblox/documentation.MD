@@ -6,6 +6,7 @@ The infoblox integration works with the infoblox API to create annotations and i
 *Annotations*
 
 Annotations can be automatically generated for the following:
+
 - Hostname
 - DNS Zone
 - Network Subnet
@@ -39,7 +40,7 @@ Inventory filters can be generated using the controls within the Inventory Filte
     * Cache subnet definition to local file
 4. Push inventory filters to assigned tetration target
  
-The subnet cache file can be cleared using the `Clear Cache` button in the **clearFInventory Filters** panel of the configuration screen for the deployment.
+The subnet cache file can be cleared using the `Clear Cache` button in the **Inventory Filters** panel of the configuration screen for the deployment.
 
 ![alt text](https://github.com/techBeck03/Scratch/raw/master/ecoScripts/infoblox/clearInventoryCache.png "Clear Cache")
 
