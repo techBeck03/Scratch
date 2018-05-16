@@ -3,7 +3,7 @@
 ### Overview
 The infoblox integration works with the infoblox API to create annotations and inventory filters for your tetration deployment
 
-***Annotations***
+*Annotations*
 
 Annotations can be automatically generated for the following:
 - Hostname
@@ -14,7 +14,7 @@ Annotations can be automatically generated for the following:
 
 Users can additionally select a tenant scope if using multi-tenancy
 
-***Inventory Filters***
+*Inventory Filters*
 
 Inventory Filters can be pushed to tetration for a given App Scope and selectively set to scope restricted by the user.
 
@@ -24,7 +24,7 @@ Inventory Filters can be pushed to tetration for a given App Scope and selective
 
 For each scheduled execution, the infoblox integration does the following:
 
-1. Search the tetration inventory for any entries missing infoblox data
+1. Search the tetration inventory for any hosts missing values for selected infoblox fields
 2. Query infoblox api for hosts found in step 1
 3. Generate annotation csv and upload to the assigned tetration target cluster
 
@@ -41,7 +41,7 @@ Inventory filters can be generated using the controls within the Inventory Filte
  
 The subnet cache file can be cleared using the `Clear Cache` button in the **clearFInventory Filters** panel of the configuration screen for the deployment.
 
-<img src="https://github.com/techBeck03/Scratch/raw/master/ecoScripts/infoblox/clearInventoryCache.png" alt="Clear Cache" style="height:200px;" />
+![alt text](https://github.com/techBeck03/Scratch/raw/master/ecoScripts/infoblox/clearInventoryCache.png "Clear Cache")
 
 ### Configuration
 
