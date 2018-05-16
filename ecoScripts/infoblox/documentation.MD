@@ -41,35 +41,33 @@ Inventory filters can be generated using the controls within the Inventory Filte
  
 The subnet cache file can be cleared using the `Clear Cache` button in the **clearFInventory Filters** panel of the configuration screen for the deployment.
 
-<img src="https://github.com/techBeck03/Scratch/raw/master/ecoScripts/infoblox/clearInventoryCache.png" altText="Clear Cache" />
+<img src="https://github.com/techBeck03/Scratch/raw/master/ecoScripts/infoblox/clearInventoryCache.png" alt="Clear Cache" style="height:200px;" />
 
 ### Configuration
 
-This section desribes how to configure a **deployment** of the vCenter Annotations image. There are two sections of configuration parameters.
+This section desribes how to configure a **deployment** of the Infoblox image. There are three sections of configuration parameters.
 
 #### Connection Parameters
 
-- **vCenter** is the hostname or IP address for vCenter. Do not include HTTP or HTTPS in this field.
-- **VC Username** specifies the login ID to be used each time this deployment runs. Use an account with read access to the vCenter and datacenter that chosen.
-- **VC Password** is the login password for the username specified above. ecohub uses this password to connect to vCenter every time, this field must be updated if the user's password changes.
-- **VC Datacenter** defines the vCenter Datacenter object from which to pull data. If information from more than one Datacenter is required, simply create multiple deployments of the vCenter image (more details below).
+- **Infoblox Hostname or IP** is the hostname or IP address for Infoblox. Do not include HTTP or HTTPS in this field.
+- **Infoblox Username** specifies the login ID to be used each time this deployment runs. Use an account in the cloud-api-only group
+- **Infoblox Password** is the login password for the username specified above. ecohub uses this password to connect to Infoblox every time, this field must be updated if the user's password changes.
 
 #### Annotation Options
 
-- **VM Name** is a toggle switch that determines if the virtual machine name is included in annotations pushed to Tetration. When this toggle is on, the name of the annotation used for VM Name can be customized. More details are provided below.
-- **VM Location** is a toggle switch that determines if the virtual machine location is included in annotations pushed to Tetration. VM location is specified in the format: `"host / cluster`". When this toggle is on, the name of the annotation used for VM Location can be customized. More details are provided below.
-- **VM Tags** is a toggle switch that determines if the vSphere tag for a virtual machine is included in the annotations pushed to Tetration. A tag is a label that you can apply to objects in the vSphere inventory. When this toggle is on, the name of the annotation used for VM Location can be customized. More details are provided below.
-- **Custom Attributes** is a toggle switch that determines if a virtual machine's custom attributes are included in the annotations pushed to Tetration. Custom attributes are key:value pairs that can be applied to virtual machines and searched upon in Tetration. When this toggle is on, the name of the annotation used for VM Location can be customized. More details are provided below.
-- **VM Networks** is a toggle switch that determines if the names of the networks (port groups) for each virtual machine are included in the annotations pushed to Tetration. When this toggle is on, the name of the annotation used for the VM Networks can be customized. More details are provided below.
-
-### Multiple Datacenters
-
-Each deployment of the vCenter integration will only interact with one Datacenter in one vCenter endpoint. If information from multiple Datacenters is desired, the ecohub administrator can create multiple **deployments** from the same vCenter Annotations **image**. 
-
-From the `IMAGES` tab in the ecohub dashboard, locate the vCenter Annotations installed image and click the `Deploy` icon. Repeat this process for each additional Datacenter required. Each deployment can be configured to pull information from a different Datacenter.
+- **Tenant Scope Name** is the tetration scope associated with the generated user annotations.  These value are automatically fetched from the assigned tetration target.
+- **Hostname** is a toggle switch that determines if the infoblox hostname is included in annotations pushed to Tetration. When this toggle is on, the name of the annotation used for Hostname can be customized. More details are provided below.
+- **DNS Zone** is a toggle switch that determines if the infoblox dns zone is included in annotations pushed to Tetration. When this toggle is on, the name of the annotation used for DNS Zone can be customized. More details are provided below.
+- **Network Subnet** s a toggle switch that determines if the infoblox subnet (x.x.x.x/xx) for a given host is included in annotations pushed to Tetration. When this toggle is on, the name of the annotation used for Network Subnet can be customized. More details are provided below.
+- **Network View** s a toggle switch that determines if the infoblox network view for a given host is included in annotations pushed to Tetration. When this toggle is on, the name of the annotation used for Network View can be customized. More details are provided below.
+- **Extensible Attributes** is a toggle switch that determines if the selected extensible attributes (fetched from infoblox) for each host are included in the annotations pushed to Tetration. When this toggle is on, the name of the annotation used for the Extensible Attributes can be customized. More details are provided below.
 
 ### Renaming attributes
 
-Each parameter in the configuration screen that can be enabled/disabled can also be renamed. For example, the user might want to push `VM Name` to Tetration but search for it using a different parameter name (like `vm_name` or `machine name`) in the Tetration user interface.
+Each parameter in the configuration screen that can be enabled/disabled can also be renamed. For example, the user might want to push `Hostname` to Tetration but search for it using a different parameter name (like `Infoblox Hostname` or `Infoblox_Hostname`) in the Tetration user interface.
 
-It is recommended to maintain consistent names (labels) for annotations in Tetration as Tetration considers `VM Name` and `VM_Name` to be completely different and unrelated fields.
+It is recommended to maintain consistent names (labels) for annotations in Tetration as Tetration considers `Infoblox Hostname` and `Infoblox_Hostname` to be completely different and unrelated fields.
+
+#### Inventory Filters
+- **Scope Restricted** is a toggle switch indicating whether the generated inventory filters should be restricted to their ownership scope
+- **App Scope ID** is a select list fetched from tetration containing all defined application scopes.  Only one application scope is currently supported.
