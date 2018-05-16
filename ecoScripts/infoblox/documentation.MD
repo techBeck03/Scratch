@@ -63,7 +63,7 @@ This section desribes how to configure a **deployment** of the Infoblox image. T
 - **Network View** s a toggle switch that determines if the infoblox network view for a given host is included in annotations pushed to Tetration. When this toggle is on, the name of the annotation used for Network View can be customized. More details are provided below.
 - **Extensible Attributes** is a toggle switch that determines if the selected extensible attributes (fetched from infoblox) for each host are included in the annotations pushed to Tetration. When this toggle is on, the name of the annotation used for the Extensible Attributes can be customized. More details are provided below.
 
-### Renaming attributes
+#### *Renaming attributes
 
 Each parameter in the configuration screen that can be enabled/disabled can also be renamed. For example, the user might want to push `Hostname` to Tetration but search for it using a different parameter name (like `Infoblox Hostname` or `Infoblox_Hostname`) in the Tetration user interface.
 
