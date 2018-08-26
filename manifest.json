@@ -30,7 +30,7 @@
             "0.1"
         ],
         "latest": "0.1",
-        "path": "https://raw.githubusercontent.com/techBeck03/Scratch/runner/ecoScripts/infoblox",
+        "path": "https://raw.githubusercontent.com/techBeck03/Scratch/runner/ecoScripts/awx",
         "icon": "icon.png",
         "tags": "ansible",
         "required_targets": ["awx"]
@@ -42,7 +42,7 @@
             "0.1"
         ],
         "latest": "0.1",
-        "path": "https://raw.githubusercontent.com/techBeck03/Scratch/runner/ecoScripts/infoblox",
+        "path": "https://raw.githubusercontent.com/techBeck03/Scratch/runner/ecoScripts/ansible",
         "icon": "icon.png",
         "tags": "ansible",
         "required_targets": [""]
