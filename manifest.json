@@ -6,7 +6,7 @@
             "0.2", "0.3"
         ],
         "latest": "0.3",
-        "path": "https://github.com/techBeck03/Scratch/raw/master/ecoScripts/vcenter",
+        "path": "https://raw.githubusercontent.com/techBeck03/Scratch/runner/ecoScripts/vcenter",
         "icon": "icon.png",
         "tags": "vmware",
         "required_targets": ["tetration"]
@@ -18,9 +18,33 @@
             "0.1", "1.1"
         ],
         "latest": "1.1",
-        "path": "https://github.com/techBeck03/Scratch/raw/master/ecoScripts/infoblox",
+        "path": "https://raw.githubusercontent.com/techBeck03/Scratch/runner/ecoScripts/infoblox",
         "icon": "icon.png",
         "tags": "ipam",
         "required_targets": ["tetration"]
+    },
+    {
+        "name": "awx",
+        "label": "AWX Workflow (wip)",
+        "versions": [
+            "0.1"
+        ],
+        "latest": "0.1",
+        "path": "https://raw.githubusercontent.com/techBeck03/Scratch/runner/ecoScripts/infoblox",
+        "icon": "icon.png",
+        "tags": "ansible",
+        "required_targets": ["awx"]
+    },
+    {
+        "name": "ansible",
+        "label": "Ansible Playbook (wip)",
+        "versions": [
+            "0.1"
+        ],
+        "latest": "0.1",
+        "path": "https://raw.githubusercontent.com/techBeck03/Scratch/runner/ecoScripts/infoblox",
+        "icon": "icon.png",
+        "tags": "ansible",
+        "required_targets": [""]
     }
 ]
