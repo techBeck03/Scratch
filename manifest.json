@@ -24,13 +24,13 @@
         "required_targets": ["tetration"]
     },
     {
-        "name": "awx",
-        "label": "AWX Workflow (wip)",
+        "name": "awx-tasks",
+        "label": "AWX Task Automator (wip)",
         "versions": [
             "0.1"
         ],
         "latest": "0.1",
-        "path": "https://raw.githubusercontent.com/techBeck03/Scratch/runner/ecoScripts/awx",
+        "path": "https://raw.githubusercontent.com/techBeck03/Scratch/runner/ecoScripts/awx-tasks",
         "icon": "icon.png",
         "tags": "ansible",
         "required_targets": ["awx"]

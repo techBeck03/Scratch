@@ -1,0 +1,14 @@
+Templates:
+- name: Deploy VM
+  count: 9
+  credentials:
+  - Auslab Infra vCenter
+  - Ansible Tower
+  wait: yes
+- name: Update Linux Host and add Local User
+  count: 1
+  inventory: "{{ 'default' | get_env('DEPLOYMENT_ID') }}"
+  credentials:
+  - Auslab Infra SSH Key
+  - Auslab Infra Linux Root
+  extra_vars: "{{ env['EXTRA_VARS'] | json }}"

@@ -1,0 +1,38 @@
+{
+    "version": "0.1",
+    "type": "api",
+    "configurable": true,
+    "schedulable": true,
+    "docker_image": "ecohub/awx_tasks:v0.1",
+    "config_parameters": [
+        {
+            "name": "workflow_tasks",
+            "label": "Workflow Tasks",
+            "order": 1,
+            "controls": [
+                {
+                    "label": "Test AWX Connectivity",
+                    "action": "test_connectivity",
+                    "message": "Testing Connectivity to AWX using target account",
+                    "type": "icon",
+                    "icon": {
+                        "group": "action",
+                        "name": "assessment"
+                    }
+                }
+            ],
+            "items": [
+                {
+                    "name": "workflow_task_list",
+                    "label": "Workflow Task List (YAML)",
+                    "type": "editor-yaml",
+                    "environment_variable_name": "AWX_WORKFLOW_TASKS",
+                    "required": true,
+                    "placeholder": "",
+                    "order": 1,
+                    "verify": false
+                }
+            ]
+        }
+    ]
+}

@@ -1,4 +1,4 @@
-## ![alt text](https://github.com/techBeck03/Scratch/raw/master/ecoScripts/infoblox/icon.png "Logo") infoblox Annotations
+## ![alt text](https://raw.githubusercontent.com/techBeck03/Scratch/runner/ecoScripts/infoblox/icon.png "Logo") infoblox Annotations
 
 ### Overview
 The infoblox integration works with the infoblox API to create annotations and inventory filters for your tetration deployment

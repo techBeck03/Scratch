@@ -1,4 +1,4 @@
-## ![alt text](https://github.com/techBeck03/Scratch/raw/master/ecoScripts/vcenter/icon.png "Logo") vCenter Annotations
+## ![alt text](https://raw.githubusercontent.com/techBeck03/Scratch/runner/ecoScripts/vcenter/icon.png "Logo") vCenter Annotations
 
 ### Overview
 The vCenter integration generates user annotations for your Tetration deployment based on rich data pulled from a single datacenter in vCenter.
