@@ -25,7 +25,8 @@
                 {
                     "name": "workflow_task_list",
                     "label": "Workflow Task List (YAML)",
-                    "type": "editor-yaml",
+                    "type": "editor",
+                    "sub_type": "yaml",
                     "environment_variable_name": "AWX_WORKFLOW_TASKS",
                     "required": true,
                     "placeholder": "",
