@@ -28,7 +28,7 @@
                     "type": "expansion-panel",
                     "sub_type": "",
                     "dynamic_add": true,
-                    "environment_variable_name": "",
+                    "environment_variable_name": "TEMPLATE_TASK_LIST",
                     "value": "",
                     "required": true,
                     "placeholder": "",
