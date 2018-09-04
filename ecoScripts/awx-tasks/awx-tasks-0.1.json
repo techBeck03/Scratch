@@ -39,6 +39,7 @@
                             "name": "template_name",
                             "label": "AWX Job Template Name",
                             "type": "fetch-single",
+                            "fetch_target": "TEMPLATES",
                             "sub_type": "",
                             "environment_variable_name": "TEMPLATE_NAME",
                             "value": "",
@@ -62,7 +63,7 @@
                         {
                             "name": "credential_list",
                             "label": "Credentials",
-                            "type": "fetch-objects",
+                            "type": "fetch-list",
                             "fetch_target": "CREDENTIALS",
                             "environment_variable_name": "TEMPLATE_CREDENTIALS",
                             "value": "",

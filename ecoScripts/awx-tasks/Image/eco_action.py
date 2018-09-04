@@ -7,10 +7,10 @@ be taken (which script to run).
 import subprocess
 import os
 import json
-import helpers
+from pigeon import Pigeon
 
 # Define pigeon messenger
-PIGEON = helpers.Pigeon()
+PIGEON = Pigeon()
 
 if os.getenv('ACTION'):
     PIGEON.note.update({

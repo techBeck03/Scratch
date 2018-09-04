@@ -40,12 +40,30 @@ class AWX(object):
         if resp.status_code == 200:
             return {'status':'exists', 'credential': resp.json()['results'][0]} if resp.json()['count'] == 1 else {'status': 'unknown'}
         return {'status': 'unknown'}
+
+    def get_credentials(self,nameOnly=False):
+        resp = self.session.get(self.uri + 'credentials')
+        if resp.status_code == 200:
+            if not nameOnly:
+                return {'status':'success', 'credentials': resp.json()['results']}
+            else:
+                return {'status':'success', 'credentials': [credential.name for credential in resp.json()['results']]}
+        return {'status': 'error', 'message': 'An error occurred while trying to retrieve credentials'}
     
     def get_template(self, name):
         resp = self.session.get(self.uri + 'job_templates/?name__iexact=' + urllib2.quote(name))
         if resp.status_code == 200:
             return {'status':'exists', 'template': resp.json()['results'][0]} if resp.json()['count'] == 1 else {'status': 'unknown'}
         return {'status': 'unknown'}
+
+    def get_templates(self,nameOnly=False):
+        resp = self.session.get(self.uri + 'job_templates')
+        if resp.status_code == 200:
+            if not nameOnly:
+                return {'status':'success', 'templates': resp.json()['results']}
+            else:
+                return {'status':'success', 'templates': [template.name for template in resp.json()['results']]}
+        return {'status': 'error', 'message': 'An error occurred while trying to retrieve job templates'}
 
     def get_inventory(self, name):
         resp = self.session.get(self.uri + 'inventories/?name__iexact=' + urllib2.quote(name))
