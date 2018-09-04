@@ -30,7 +30,7 @@ class AWX(object):
         self.jinja.filters['get_env'] = get_env
 
     def test_connectivity(self):
-        resp = self.session.get('ping')
+        resp = self.session.get(self.uri + 'ping')
         if resp.status_code != 200:
             return {'status': 'error', 'message': 'Unable to reach AWX with provided credentials'}
         return {'status': 'success', 'message': 'Connectivity verified'}

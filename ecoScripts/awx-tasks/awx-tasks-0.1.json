@@ -23,15 +23,68 @@
             ],
             "items": [
                 {
-                    "name": "workflow_task_list",
-                    "label": "Workflow Task List (YAML)",
-                    "type": "editor",
-                    "sub_type": "yaml",
-                    "environment_variable_name": "AWX_WORKFLOW_TASKS",
+                    "name": "template_task_list",
+                    "label": "Task-",
+                    "type": "expansion-panel",
+                    "sub_type": "",
+                    "dynamic_add": true,
+                    "environment_variable_name": "",
+                    "value": "",
                     "required": true,
                     "placeholder": "",
                     "order": 1,
-                    "verify": false
+                    "verify": false,
+                    "children": [
+                        {
+                            "name": "template_name",
+                            "label": "AWX Job Template Name",
+                            "type": "fetch-single",
+                            "sub_type": "",
+                            "environment_variable_name": "TEMPLATE_NAME",
+                            "value": "",
+                            "placeholder": "Select Job Template",
+                            "order": 1,
+                            "group": 1,
+                            "verify": false
+                        },
+                        {
+                            "name": "run_count",
+                            "label": "Template Run Count",
+                            "type": "select",
+                            "sub_type": "single-range-1-10",
+                            "environment_variable_name": "WORKFLOW_COUNT",
+                            "value": "",
+                            "placeholder": "Run Count",
+                            "order": 2,
+                            "group": 1,
+                            "verify": false
+                        },
+                        {
+                            "name": "credential_list",
+                            "label": "Credentials",
+                            "type": "fetch-objects",
+                            "fetch_target": "CREDENTIALS",
+                            "environment_variable_name": "TEMPLATE_CREDENTIALS",
+                            "value": "",
+                            "placeholder": "Credentials",
+                            "popover": "Select credentials for template",
+                            "order": 3,
+                            "group": 1,
+                            "verify": false
+                        },
+                        {
+                            "name": "inventory",
+                            "label": "Inventory",
+                            "type": "text",
+                            "environment_variable_name": "TEMPLATE_INVENTORY",
+                            "value": "",
+                            "placeholder": "Inventory name or {{ 'default' | get_env('DEPLOYMENT_ID') }}",
+                            "popover": "Inventory name for template",
+                            "order": 4,
+                            "group": 1,
+                            "verify": false
+                        }
+                    ]
                 }
             ]
         },
