@@ -6,11 +6,11 @@ from pigeon import Pigeon
 # Global Variables
 # ----------------------------------------------------------------------------
 pigeon = Pigeon()
+FETCH_TARGET = getenv('FETCH_TARGET')
 
 # ============================================================================
 # Main
 # ----------------------------------------------------------------------------
-
 def main():
     try:
         awx = AWX(
@@ -18,54 +18,22 @@ def main():
             token=getenv('AWX_TOKEN')
         )
         resp = awx.test_connectivity()
-        if resp['status'] != 'success':
-            pigeon.note.update({
-                'status_code': 404,
-                'message' : resp['message'],
-                'data' : {}
-            })
-            pigeon.send()
-            return
-        if getenv('FETCH_TARGET') == 'TEMPLATES':
-            resp = awx.get_templates()
-            if resp['status'] != 'success':
-                pigeon.note.update({
-                    'status_code': 404,
-                    'message' : resp['message'],
-                    'data' : {}
-                })
-                pigeon.send()
-                return
-            pigeon.note.update({
-                'status_code': 200,
-                'message' : resp['message'],
-                'data' : {}
-            })
-            pigeon.send()
-        elif getenv('FETCH_TARGET') == 'CREDENTIALS':
-            resp = awx.get_credentials()
-            if resp['status'] != 'success':
-                pigeon.note.update({
-                    'status_code': 404,
-                    'message' : resp['message'],
-                    'data' : {}
-                })
-                pigeon.send()
-                return
-            pigeon.note.update({
-                'status_code': 200,
-                'message' : resp['message'],
-                'data' : {}
-            })
-            pigeon.send()
+        keep_going = pigeon.sendUpdate(resp)
+        if not keep_going: return
+        pigeon.sendInfoMessage('Fetching {target} from AWX: {endpoint}'.format(target=str(FETCH_TARGET).lower(), endpoint=getenv('AWX_ENDPOINT')))
+        options = {
+            'TEMPLATES': awx.fetch_templates,
+            'CREDENTIALS': awx.fetch_credentials
+        }
+        fetch_result = options[FETCH_TARGET](nameOnly=True)
+        pigeon.sendUpdate(fetch_result, last=True)
         return
     except Exception as e:
-        pigeon.note.update({
-            'status_code': 400,
+        pigeon.sendUpdate({
+            'status': 'error',
             'message' : 'An exception occurred while testing connectivity: {}'.format(str(e)),
             'data' : {}
         })
-        pigeon.send()
 
 if __name__ == "__main__":
     main()

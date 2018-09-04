@@ -22,7 +22,8 @@ if os.getenv('ACTION'):
     options = {
         'TEST_CONNECTIVITY': lambda : subprocess.call(["python", "test_connectivity.py"]),
         'RUN_INTEGRATION': lambda : subprocess.call(["python", "run-templates.py"]),
-        'VALIDATE': lambda : subprocess.call(["python", "validate.py"])
+        'VALIDATE': lambda : subprocess.call(["python", "validate.py"]),
+        'FETCH_ITEMS': lambda : subprocess.call(["python", "fetch-items.py"])
     }
     result = options[os.environ['ACTION']]()
 else:
