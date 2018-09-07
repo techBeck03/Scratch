@@ -18,7 +18,7 @@ def main():
             token=getenv('AWX_TOKEN')
         )
         resp = awx.test_connectivity()
-        pigeon.sendUpdate(resp)
+        pigeon.sendUpdate(resp,last=True)
         return
     except Exception as e:
         pigeon.sendUpdate({
