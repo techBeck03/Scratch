@@ -33,7 +33,7 @@ class Pigeon(object):
         elif status in ['error', 'fail', 'failed']:
             return 400
         else:
-            return 403
+            return 404
 
     def sendInfoMessage(self, message):
         self.sendUpdate({

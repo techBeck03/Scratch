@@ -10,15 +10,10 @@ import json
 from pigeon import Pigeon
 
 # Define pigeon messenger
-PIGEON = Pigeon()
+pigeon = Pigeon()
 
 if os.getenv('ACTION'):
-    PIGEON.note.update({
-        'status_code': 100,
-        'message' : 'Starting action ' + os.environ['ACTION'],
-        'data' : {}
-    })
-    PIGEON.send()
+    pigeon.sendInfoMessage('Starting action ' + os.environ['ACTION'])
     options = {
         'TEST_CONNECTIVITY': lambda : subprocess.call(["python", "test_connectivity.py"]),
         'RUN_INTEGRATION': lambda : subprocess.call(["python", "run-templates.py"]),
@@ -27,17 +22,10 @@ if os.getenv('ACTION'):
     }
     result = options[os.environ['ACTION']]()
 else:
-    PIGEON.note.update({
-        'status_code': 404,
-        'message' : 'Action: ' + os.getenv('ACTION') + 'not implemented',
-        'data' : {}
+    pigeon.sendUpdate({
+        'status': 'unknown',
+        'message': 'Action: ' + os.getenv('ACTION') + 'not implemented'
     })
-    PIGEON.send()
 
 # print a message that the container has completed its work
-PIGEON.note.update({
-    'status_code': 100,
-    'message' : 'Action complete',
-    'data' : {}
-})
-PIGEON.send()
+pigeon.sendInfoMessage('Action complete')

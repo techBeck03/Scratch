@@ -7,6 +7,7 @@ from jinja2 import Environment, FileSystemLoader
 import os
 from jsonschema import validate
 import time
+import re
 
 requests.packages.urllib3.disable_warnings()
 
@@ -41,13 +42,13 @@ class AWX(object):
             return {'status':'exists', 'credential': resp.json()['results'][0]} if resp.json()['count'] == 1 else {'status': 'unknown'}
         return {'status': 'unknown'}
 
-    def fetch_credentials(self,nameOnly=False):
+    def fetch_credentials(self):
         resp = self.session.get(self.uri + 'credentials')
         if resp.status_code == 200:
-            if not nameOnly:
-                return {'status':'success', 'data': resp.json()['results']}
-            else:
-                return {'status':'success', 'data': [credential['name'] for credential in resp.json()['results']]}
+            return_items = []
+            for result in resp.json()['results']:
+                return_items.append({'label': result['name'],'value': result['name']})
+            return {'status': 'success', 'message': 'Successfully returning fetched credentials', 'data': return_items}
         return {'status': 'error', 'message': 'An error occurred while trying to retrieve credentials'}
     
     def get_template(self, name):
@@ -59,10 +60,10 @@ class AWX(object):
     def fetch_templates(self,nameOnly=False):
         resp = self.session.get(self.uri + 'job_templates')
         if resp.status_code == 200:
-            if not nameOnly:
-                return {'status':'success', 'data': resp.json()['results']}
-            else:
-                return {'status':'success', 'data': [template['name'] for template in resp.json()['results']]}
+            return_items = []
+            for result in resp.json()['results']:
+                return_items.append({'label': result['name'],'value': result['name']})
+            return {'status': 'success', 'message': 'Successfully returning fetched templates', 'data': return_items}
         return {'status': 'error', 'message': 'An error occurred while trying to retrieve job templates'}
 
     def get_inventory(self, name):
@@ -83,38 +84,44 @@ class AWX(object):
         return self.session.post(self.uri + 'job_templates/{}/launch/'.format(id), json=req_payload)
 
     def render(self, message):
-        return json.loads(self.jinja.from_string(json.dumps(message)).render())
+        message = json.dumps(message)
+        matches = re.findall(r'_ENV_\w+', message)
+        for match in matches:
+            env_variable = '_'.join(match.split('_')[2:])
+            env_variable = '{' + "{{ 'default' | get_env('{env_var}') }}".format(env_var=env_variable.upper()) + '}'
+            message = re.sub(match, env_variable, message)
+        return json.loads(self.jinja.from_string(message).render())
 
-    def validate_deployment_settings(self, deployment_settings, ignore_inventory=True):
+    def validate_deployment_settings(self, deployment_settings):
         # Validate deployment_settings against schema
         validated_settings = []
-        try:
-            schema = {}
-            with open(DEPLOYMENT_SETTINGS_SCHEMA, 'r') as f:
-                schema = json.load(f)
-            validate(deployment_settings, schema)
-        except Exception as e:
-            print e
-            e = str(e).split('\n')
-            return {'status': 'error', 'message': "{} {}".format(e[2], e[0])}
+        # try:
+        #     schema = {}
+        #     with open(DEPLOYMENT_SETTINGS_SCHEMA, 'r') as f:
+        #         schema = json.load(f)
+        #     validate(deployment_settings, schema)
+        # except Exception as e:
+        #     print e
+        #     e = str(e).split('\n')
+        #     return {'status': 'error', 'message': "{} {}".format(e[2], e[0])}
         # Verify job template exists
-        for setting in deployment_settings['Tasks']:
-            resp = self.get_template(setting['name'])
+        for setting in deployment_settings:
+            resp = self.get_template(setting['template_name'])
             if resp['status'] == 'unknown':
                 return {'status': 'error', 'message': 'Unknown template name: {}'.format(setting['name'])}
             template = resp['template']
             current_setting = {
-                'template_name': setting['name'],
+                'template_name': setting['template_name'],
                 'template_id': template['id'],
                 'credentials': [],
                 'inventory': [],
-                'count': setting['count'],
+                'count': setting['run_count'],
                 'wait': setting['wait'] if 'wait' in setting else "yes"
             }
-            if 'credentials' in setting:
+            if 'credential_list' in setting:
                 if not template['ask_credential_on_launch']:
                     return {'status': 'error', 'message': 'Credentials are not allowed to be passed for template: {}'.format(setting['name'])}
-                for credential in setting['credentials']:
+                for credential in setting['credential_list']:
                     resp = self.get_credential(credential)
                     if resp['status'] == 'unknown':
                         return {'status': 'error', 'message': 'Unknown credential name: {}'.format(credential)}
@@ -124,7 +131,11 @@ class AWX(object):
             if 'inventory' in setting:
                 if not template['ask_inventory_on_launch']:
                     return {'status': 'error', 'message': 'Inventory is not allowed to be passed for template: {}'.format(setting['name'])}
-                current_setting['inventory'] = setting['inventory']
+                if '_ENV_' not in setting['inventory']:
+                    resp = self.get_inventory(setting['inventory'])
+                    if resp['status'] == 'unknown':
+                        return {'status': 'error', 'message': 'Unable to find inventory for: {}'.format(setting['inventory'])}
+                    current_setting['inventory'] = resp['inventory']['id']
             else:
                 del current_setting['inventory']
             current_setting['pass_extra_vars'] = template['ask_variables_on_launch']
@@ -136,11 +147,6 @@ class AWX(object):
             jobs = []
             for i in range(template['count']):
                 extra_vars['workflow_vars']['loop_index'] = i
-                if 'inventory' in template:
-                    resp = self.get_inventory(template['inventory'])
-                    if resp['status'] == 'unknown':
-                        return {'status': 'error', 'message': 'Unable to find inventory for: {}'.format(template['inventory'])}
-                    template['inventory'] = resp['inventory']['id']
                 resp = self.launch_template(
                     id=template['template_id'],
                     extra_vars=self.render(extra_vars) if template['pass_extra_vars'] else None,
@@ -162,7 +168,7 @@ class AWX(object):
         run_time = 0
         start = time.time()
         while True and run_time < timeout:
-            print '\n------------------------------------------------------------------\nElapsed Time:{}s\n'.format(int(time.time() - start))
+            # print '\n------------------------------------------------------------------\nElapsed Time:{}s\n'.format(int(time.time() - start))
             resp = self.session.get(self.uri + 'jobs/?id__in=' + ','.join(str(x) for x in jobs))
             if resp.status_code == 200:
                 pending = False

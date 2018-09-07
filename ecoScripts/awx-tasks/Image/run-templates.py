@@ -7,6 +7,8 @@ import json
 # Global Variables
 # ----------------------------------------------------------------------------
 pigeon = Pigeon()
+TEMPLATE_TASK_LIST = json.loads(getenv('TEMPLATE_TASK_LIST'))
+EXTRA_VARS = json.loads(getenv('AWX_WORKFLOW_VARS'))
 
 # ============================================================================
 # Main
@@ -20,45 +22,14 @@ def main():
             token=getenv('AWX_TOKEN')
         )
         resp = awx.test_connectivity()
-        if resp['status'] != 'success':
-            pigeon.note.update({
-                'status_code': 404,
-                'message': resp['message'],
-                'data': {}
-            })
-            pigeon.send()
-            return
-        extra_vars = getenv('AWX_WORKFLOW_VARS')
-        workflow_tasks = getenv('AWX_WORKFLOW_TASKS')
-
-        resp = awx.validate_deployment_settings(
-            awx.render(workflow_tasks), ignore_inventory=False)
-        if resp['status'] == 'success':
-            resp = awx.run_deployment(resp['settings'], extra_vars)
-            if resp['status'] == 'success':
-                pigeon.note.update({
-                    'status_code': 200,
-                    'message': resp['message'],
-                    'data': {}
-                })
-                pigeon.send()
-                return
-            else:
-                pigeon.note.update({
-                'status_code': 404,
-                'message': resp['message'],
-                'data': {}
-            })
-            pigeon.send()
-            return
-        else:
-            pigeon.note.update({
-                'status_code': 404,
-                'message': resp['message'],
-                'data': {}
-            })
-            pigeon.send()
-            return
+        keep_going = pigeon.sendUpdate(resp)
+        if not keep_going: return
+        settings = awx.validate_deployment_settings(awx.render(TEMPLATE_TASK_LIST))
+        keep_going = pigeon.sendUpdate(settings)
+        if not keep_going: return
+        resp = awx.run_deployment(settings['settings'], EXTRA_VARS)
+        pigeon.sendUpdate(resp, last=True)
+        return
     except Exception as e:
         pigeon.note.update({
             'status_code': 400,

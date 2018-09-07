@@ -25,13 +25,13 @@ def main():
             'TEMPLATES': awx.fetch_templates,
             'CREDENTIALS': awx.fetch_credentials
         }
-        fetch_result = options[FETCH_TARGET](nameOnly=True)
+        fetch_result = options[FETCH_TARGET]()
         pigeon.sendUpdate(fetch_result, last=True)
         return
     except Exception as e:
         pigeon.sendUpdate({
             'status': 'error',
-            'message' : 'An exception occurred while testing connectivity: {}'.format(str(e)),
+            'message' : 'An exception occurred while fetching {}: {}'.format(FETCH_TARGET, str(e)),
             'data' : {}
         })
 
