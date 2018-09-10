@@ -115,35 +115,35 @@ class AWX(object):
         #     return {'status': 'error', 'message': "{} {}".format(e[2], e[0])}
         # Verify job template exists
         for setting in deployment_settings:
-            resp = self.get_template(setting['template_name'])
+            resp = self.get_template(setting['TEMPLATE_NAME'])
             if resp['status'] == 'unknown':
                 return {'status': 'error', 'message': 'Unknown template name: {}'.format(setting['name'])}
             template = resp['template']
             current_setting = {
-                'template_name': setting['template_name'],
+                'template_name': setting['TEMPLATE_NAME'],
                 'template_id': template['id'],
                 'credentials': [],
                 'inventory': [],
-                'count': setting['run_count'],
+                'count': setting['WORKFLOW_COUNT'],
                 'wait': setting['wait'] if 'wait' in setting else "yes"
             }
-            if 'credential_list' in setting:
+            if 'TEMPLATE_CREDENTIALS' in setting:
                 if not template['ask_credential_on_launch']:
-                    return {'status': 'error', 'message': 'Credentials are not allowed to be passed for template: {}'.format(setting['name'])}
-                for credential in setting['credential_list']:
+                    return {'status': 'error', 'message': 'Credentials are not allowed to be passed for template: {}'.format(setting['TEMPLATE_NAME'])}
+                for credential in json.loads(setting['TEMPLATE_CREDENTIALS']):
                     resp = self.get_credential(credential)
                     if resp['status'] == 'unknown':
                         return {'status': 'error', 'message': 'Unknown credential name: {}'.format(credential)}
                     current_setting['credentials'].append(resp['credential']['id'])
             else:
                 del current_setting['credentials']
-            if 'inventory' in setting:
+            if 'TEMPLATE_INVENTORY' in setting:
                 if not template['ask_inventory_on_launch']:
-                    return {'status': 'error', 'message': 'Inventory is not allowed to be passed for template: {}'.format(setting['name'])}
-                if '_ENV_' not in setting['inventory']:
-                    resp = self.get_inventory(setting['inventory'])
+                    return {'status': 'error', 'message': 'Inventory is not allowed to be passed for template: {}'.format(setting['TEMPLATE_NAME'])}
+                if '_ENV_' not in setting['TEMPLATE_INVENTORY']:
+                    resp = self.get_inventory(setting['TEMPLATE_INVENTORY'])
                     if resp['status'] == 'unknown':
-                        return {'status': 'error', 'message': 'Unable to find inventory for: {}'.format(setting['inventory'])}
+                        return {'status': 'error', 'message': 'Unable to find inventory for: {}'.format(setting['TEMPLATE_INVENTORY'])}
                     current_setting['inventory'] = resp['inventory']['id']
             else:
                 del current_setting['inventory']
