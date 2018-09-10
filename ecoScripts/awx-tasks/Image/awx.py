@@ -72,6 +72,15 @@ class AWX(object):
             return {'status':'exists', 'inventory': resp.json()['results'][0]} if resp.json()['count'] == 1 else {'status': 'unknown'}
         return {'status': 'unknown'}
 
+    def fetch_inventories(self,nameOnly=False):
+        resp = self.session.get(self.uri + 'inventories')
+        if resp.status_code == 200:
+            return_items = []
+            for result in resp.json()['results']:
+                return_items.append({'label': result['name'],'value': result['name']})
+            return {'status': 'success', 'message': 'Successfully returning fetched inventories', 'data': return_items}
+        return {'status': 'error', 'message': 'An error occurred while trying to retrieve inventories'}
+
     def launch_template(self,id,extra_vars=None, credentials=None, inventory=None):
         req_payload={}
         if extra_vars:
