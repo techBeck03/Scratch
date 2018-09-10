@@ -23,7 +23,8 @@ def main():
         pigeon.sendInfoMessage('Fetching {target} from AWX: {endpoint}'.format(target=str(FETCH_TARGET).lower(), endpoint=getenv('AWX_ENDPOINT')))
         options = {
             'TEMPLATES': awx.fetch_templates,
-            'CREDENTIALS': awx.fetch_credentials
+            'CREDENTIALS': awx.fetch_credentials,
+            'INVENTORIES': awx.fetch_inventories
         }
         fetch_result = options[FETCH_TARGET]()
         pigeon.sendUpdate(fetch_result, last=True)

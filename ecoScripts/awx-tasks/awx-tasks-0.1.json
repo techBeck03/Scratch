@@ -3,7 +3,7 @@
     "type": "api",
     "configurable": true,
     "schedulable": true,
-    "docker_image": "ecohub/awx_tasks:0.3",
+    "docker_image": "ecohub/awx_tasks:0.4",
     "config_parameters": [
         {
             "name": "workflow_tasks",
@@ -81,6 +81,7 @@
                             "label": "Inventory",
                             "type": "fetch-single",
                             "sub_type": "allow-custom",
+                            "fetch_target": "INVENTORIES",
                             "environment_variable_name": "TEMPLATE_INVENTORY",
                             "value": "",
                             "required": true,
