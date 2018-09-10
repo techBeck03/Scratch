@@ -137,7 +137,7 @@ class AWX(object):
                     current_setting['credentials'].append(resp['credential']['id'])
             else:
                 del current_setting['credentials']
-            if 'TEMPLATE_INVENTORY' in setting:
+            if 'TEMPLATE_INVENTORY' in setting and setting['TEMPLATE_INVENTORY']:
                 if not template['ask_inventory_on_launch']:
                     return {'status': 'error', 'message': 'Inventory is not allowed to be passed for template: {}'.format(setting['TEMPLATE_NAME'])}
                 if '_ENV_' not in setting['TEMPLATE_INVENTORY']:
