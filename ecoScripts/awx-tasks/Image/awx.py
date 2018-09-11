@@ -97,7 +97,8 @@ class AWX(object):
         matches = re.findall(r'_ENV_\w+', message)
         for match in matches:
             env_variable = '_'.join(match.split('_')[2:])
-            env_variable = '{' + "{{ 'default' | get_env('{env_var}') }}".format(env_var=env_variable.upper()) + '}'
+            if env_variable.upper() in os.environ:
+                env_variable = '{' + "{{ 'default' | get_env('{env_var}') }}".format(env_var=env_variable.upper()) + '}'
             message = re.sub(match, env_variable, message)
         return json.loads(self.jinja.from_string(message).render())
 

@@ -9,6 +9,8 @@ import json
 pigeon = Pigeon()
 TEMPLATE_TASK_LIST = json.loads(getenv('TEMPLATE_TASK_LIST'))
 EXTRA_VARS = json.loads(getenv('AWX_WORKFLOW_VARS'))
+DEPLOYMENT_VARS = json.loads(getenv('DEPLOYMENT_VARS'))
+DEPLOYMENT_ID = getenv('JOB_ID')
 
 # ============================================================================
 # Main
@@ -21,6 +23,12 @@ def main():
             endpoint=getenv('AWX_ENDPOINT'),
             token=getenv('AWX_TOKEN')
         )
+        EXTRA_VARS.update({
+            'deployment': {
+                'user': DEPLOYMENT_VARS['user'],
+                'id': DEPLOYMENT_ID
+            }
+        })
         resp = awx.test_connectivity()
         keep_going = pigeon.sendUpdate(resp)
         if not keep_going: return
