@@ -1,0 +1,17 @@
+---
+
+# =============================================================================
+# PLAY - Remove user (runs on windows group)
+# -----------------------------------------------------------------------------
+
+- name: Remove user from Active Directory
+  hosts: windows
+  gather_facts: no
+  tasks:
+    - name: Remove user
+      win_domain_user:
+        name: "{{ userid }}"
+        state: absent
+      register: removed_user
+
+    - debug: var=removed_user verbosity=1

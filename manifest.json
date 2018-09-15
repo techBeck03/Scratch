@@ -46,5 +46,17 @@
         "icon": "icon.png",
         "tags": "ansible",
         "required_targets": [""]
+    },
+    {
+        "name": "usermgmt",
+        "label": "Lab User Management (wip)",
+        "versions": [
+            "0.1"
+        ],
+        "latest": "0.1",
+        "path": "https://raw.githubusercontent.com/techBeck03/Scratch/runner/ecoScripts/user-management",
+        "icon": "icon.png",
+        "tags": "user",
+        "required_targets": [""]
     }
 ]

@@ -1,0 +1,85 @@
+---
+
+# =============================================================================
+# PLAY - Add user to Active Directory (runs on windows group)
+# -----------------------------------------------------------------------------
+
+- name: Add user to Active Directory
+  hosts: windows
+  gather_facts: no
+  tasks:
+
+  - name: Create random password
+    set_fact: random_password={{ lookup('password', '/dev/null') }}
+
+  - debug: var=random_password
+
+  # this is necessary because there is a bug in the win_domain_user Ansible
+  # module to where if you try to create a user who already exists, it will bomb
+  - name: Check if account already exists
+    win_domain_user:
+      name: "{{ userid }}"
+      state: query
+    register: query_result
+
+  - debug: var=query_result  verbosity=1
+
+  - name: Add user
+    win_domain_user:
+      account_locked: no
+      attributes: 
+        aciCiscoAVPair: "shell:domains = all//"
+        samAccountName: "{{ userid }}"
+      description: created by Ansible
+      email: "{{ userid }}@cisco.com"
+      enabled: yes
+      firstname: "{{ givenName }}"
+      groups:
+        - Perseus Users
+      groups_action: add
+      name: "{{ givenName}} {{ surname }}"
+      password: "{{ random_password }}"
+      password_never_expires: yes
+      path: CN=Users,DC=auslab,DC=cisco,DC=com
+      state: present
+      surname: "{{ surname }}"
+      update_password: on_create
+      upn: "{{ userid }}@auslab.cisco.com"
+    when: query_result.state == "absent"
+    register: new_user
+
+  - debug: var=new_user verbosity=1
+
+# =============================================================================
+# PLAY - Notify user (runs on localhost)
+# -----------------------------------------------------------------------------
+
+- name: Notify user
+  hosts: localhost
+  gather_facts: no
+  vars:
+    random_password: "{{hostvars[groups['windows'][0]]['random_password']}}"
+    user_created: "{{hostvars[groups['windows'][0]]['new_user'].changed}}"
+  tasks:
+
+  - name: Display all variables for debug
+    debug: var=vars verbosity=1
+
+  - debug: msg="{{ lookup('template', 'notify-new.htm') }}" verbosity=1
+
+  - name: Send message to new user
+    mail:
+      body: "{{ lookup('template', 'notify-new.htm') }}"
+      cc: wwdc-labadmins@cisco.com
+      charset: utf-8
+      from: wwdc-labadmins@cisco.com
+      # host: outbound.cisco.com
+      host: smtp-ext.cisco.com
+      port: 25
+      secure: never
+      subject: Welcome to the AUSLAB domain
+      subtype: html
+      timeout: 20
+      # to: Doron Chosnek <dchosnek@cisco.com>
+      to: "{{ userid }}@cisco.com"
+    when: user_created
