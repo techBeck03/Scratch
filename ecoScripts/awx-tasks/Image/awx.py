@@ -89,7 +89,6 @@ class AWX(object):
             req_payload['credentials'] = credentials
         if inventory:
             req_payload['inventory_id'] = inventory
-        print json.dumps(req_payload,indent=4)
         return self.session.post(self.uri + 'job_templates/{}/launch/'.format(id), json=req_payload)
 
     def render(self, message):
@@ -141,11 +140,7 @@ class AWX(object):
             if 'TEMPLATE_INVENTORY' in setting and setting['TEMPLATE_INVENTORY']:
                 if not template['ask_inventory_on_launch']:
                     return {'status': 'error', 'message': 'Inventory is not allowed to be passed for template: {}'.format(setting['TEMPLATE_NAME'])}
-                if '_ENV_' not in setting['TEMPLATE_INVENTORY']:
-                    resp = self.get_inventory(setting['TEMPLATE_INVENTORY'])
-                    if resp['status'] == 'unknown':
-                        return {'status': 'error', 'message': 'Unable to find inventory for: {}'.format(setting['TEMPLATE_INVENTORY'])}
-                    current_setting['inventory'] = resp['inventory']['id']
+                current_setting['inventory'] = setting['TEMPLATE_INVENTORY']
             else:
                 del current_setting['inventory']
             current_setting['pass_extra_vars'] = template['ask_variables_on_launch']
@@ -154,6 +149,11 @@ class AWX(object):
 
     def run_deployment(self, templates, extra_vars):
         for template in templates:
+            if 'inventory' in template:
+                resp = self.get_inventory(template['inventory'])
+                if resp['status'] == 'unknown':
+                    return {'status': 'error', 'message': 'Unable to find inventory for: {}'.format(template['inventory'])}
+                template['inventory'] = resp['inventory']['id']
             jobs = []
             for i in range(template['count']):
                 extra_vars['workflow_vars']['loop_index'] = i
@@ -183,7 +183,7 @@ class AWX(object):
             if resp.status_code == 200:
                 pending = False
                 for job in resp.json()['results']:
-                    print 'Status for job: {} is {}'.format(job['id'],job['status'])
+                    # print 'Status for job: {} is {}'.format(job['id'],job['status'])
                     if job['failed']:
                         return {'status': 'error', 'message': 'Job {} failed to complete'.format(job['id'])}
                     elif job['status'] != 'successful':
