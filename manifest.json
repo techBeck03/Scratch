@@ -48,7 +48,7 @@
         "required_targets": [""]
     },
     {
-        "name": "usermgmt",
+        "name": "user-management",
         "label": "Lab User Management (wip)",
         "versions": [
             "0.1"
