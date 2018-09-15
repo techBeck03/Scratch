@@ -1,12 +1,11 @@
 ## ![alt text](https://raw.githubusercontent.com/techBeck03/Scratch/runner/ecoScripts/user-management/icon.png "Logo") Lab user management
 
-### Overview
+## Overview
 This image can:
+
 - Create a new user
 - Delete an existing user
 - Reset an existing user's password
-
-### Behavior
 
 ## Create new user
 
@@ -29,7 +28,7 @@ The specified user account will be removed from:
 
 Password will be reset to random password and email sent.
 
-### Parameters
+## Parameters
 
 - **givenName** the user's given (first) name
 - **surname** the user's surname (last name)
