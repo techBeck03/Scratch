@@ -84,7 +84,7 @@
                     "label": "Given Name",
                     "type": "text",
                     "environment_variable_name": "USER_GIVEN_NAME",
-                    "required": true,
+                    "required": false,
                     "placeholder": "user given or first name",
                     "order": 1,
                     "verify": true
@@ -94,7 +94,7 @@
                     "label": "Surname",
                     "type": "text",
                     "environment_variable_name": "USER_SURNAME",
-                    "required": true,
+                    "required": false,
                     "placeholder": "user last name or surname",
                     "order": 2,
                     "verify": true
@@ -107,6 +107,63 @@
                     "required": true,
                     "placeholder": "user ID",
                     "order": 3,
+                    "verify": true
+                }
+            ]
+        },
+        {
+            "name": "guacamole_parameters",
+            "label": "Guacamole",
+            "order": 3,
+            "items": [
+                {
+                    "name": "guacdbhost",
+                    "label": "DB hostname or IP",
+                    "type": "text",
+                    "environment_variable_name": "DB_HOST",
+                    "required": true,
+                    "placeholder": "172.16.1.34",
+                    "order": 1,
+                    "verify": true
+                },
+                {
+                    "name": "guacdbport",
+                    "label": "DB port",
+                    "type": "text",
+                    "environment_variable_name": "DB_PORT",
+                    "required": true,
+                    "placeholder": "3306",
+                    "order": 2,
+                    "verify": true
+                },
+                {
+                    "name": "guacdbusername",
+                    "label": "DB user",
+                    "type": "text",
+                    "environment_variable_name": "DB_USER",
+                    "required": true,
+                    "placeholder": "guac_user",
+                    "order": 3,
+                    "verify": true
+                },
+                {
+                    "name": "guacdbpassword",
+                    "label": "DB password",
+                    "type": "password",
+                    "environment_variable_name": "DB_PASSWORD",
+                    "required": true,
+                    "placeholder": "guac_password",
+                    "order": 4,
+                    "verify": true
+                },
+                {
+                    "name": "guacdbname",
+                    "label": "Primary AD IP address",
+                    "type": "text",
+                    "environment_variable_name": "DB_NAME",
+                    "required": true,
+                    "placeholder": "guac_db",
+                    "order": 5,
                     "verify": true
                 }
             ]
