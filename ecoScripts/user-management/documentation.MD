@@ -10,6 +10,7 @@ This image can:
 ## Create new user
 
 The specified user account will be added to:
+
 - Active Directory
 - Guacamole
 - Tetration (Perseus)
@@ -20,6 +21,7 @@ If the specified user account already exists in any of the above steps, it will 
 ## Delete existing user
 
 The specified user account will be removed from:
+
 - Active Directory
 - Guacamole
 - Tetration (Perseus)
