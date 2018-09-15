@@ -6,7 +6,7 @@
     "docker_image": "ecohub/usermgmt:v0.1",
     "config_parameters": [
         {
-            "name": "connection_parameters",
+            "name": "activedirectory_parameters",
             "label": "Active Directory",
             "order": 1,
             "items": [
@@ -43,8 +43,8 @@
             ]
         },
         {
-            "name": "primary_parameters",
-            "label": "Primary Parameters",
+            "name": "user_parameters",
+            "label": "User Parameters",
             "order": 2,
             "controls": [
                 {
@@ -74,7 +74,7 @@
                     "type": "icon",
                     "icon": {
                         "group": "action",
-                        "name": "cached"
+                        "name": "360"
                     }
                 }
             ],
